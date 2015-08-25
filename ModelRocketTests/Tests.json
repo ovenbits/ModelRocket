@@ -1,0 +1,25 @@
+{
+	"make" : "BMW",
+	"model" : "M5",
+	"year" : 2015,
+	"color" : "#132F5B",
+	"number_of_doors" : 4,
+	"zero_to_sixty_time" : 4.7,
+	"nav_system_standard" : true,
+	"manufacturer" : {
+		"company_name" : "Bayerische Motoren Werke AG",
+		"headquarters" : "Munich, Bavaria, Germany",
+		"website" : "http://www.bmw.com",
+		"founded" : "1916-03-07T00:00:00.000Z"
+	},
+	"available_colors" : [
+		"#00304C",
+		"#1C2127",
+		"#D8D8D8",
+		"#820F0F"
+	],
+	"purchased_trims" : {
+    	"sedan" : 1024,
+    	"gran_coupe" : 512
+    }
+}

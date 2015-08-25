@@ -1,0 +1,4 @@
+language: objective-c
+osx_image: xcode6.4
+script:
+    - xcodebuild -project ModelRocket.xcodeproj -scheme ModelRocket -sdk iphonesimulator8.4 test

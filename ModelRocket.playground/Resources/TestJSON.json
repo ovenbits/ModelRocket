@@ -1,0 +1,15 @@
+{
+    "make" : "BMW",
+    "model" : "M5",
+    "year" : 2015,
+    "color" : "#132F5B",
+    "available_colors" : [
+        "#FF0000",
+        "#00FF00",
+        "#0000FF"
+    ],
+    "available_trims" : {
+        "sedan" : 1024,
+        "gran-turismo" : 512
+    }
+}
