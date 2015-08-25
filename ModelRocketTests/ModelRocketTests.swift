@@ -106,7 +106,7 @@ class ModelRocketTests: XCTestCase {
         if let date = testModel.date.value {
             
             let calendar = NSCalendar.currentCalendar()
-            let units: NSCalendarUnit = .CalendarUnitYear | .CalendarUnitMonth | .CalendarUnitDay | .CalendarUnitHour | .CalendarUnitMinute | .CalendarUnitSecond | .CalendarUnitNanosecond
+            let units: NSCalendarUnit = [.Year, .Month, .Day, .Hour, .Minute, .Second, .Nanosecond]
             let components = calendar.components(units, fromDate: date)
             
             XCTAssertEqual(components.year, 2015, "Date: years not equal")
@@ -228,7 +228,7 @@ class ModelRocketTests: XCTestCase {
             
             if let date = unarchived.date.value {
                 let calendar = NSCalendar.currentCalendar()
-                let units: NSCalendarUnit = .CalendarUnitYear | .CalendarUnitMonth | .CalendarUnitDay | .CalendarUnitHour | .CalendarUnitMinute | .CalendarUnitSecond | .CalendarUnitNanosecond
+                let units: NSCalendarUnit = [.Year, .Month, .Day, .Hour, .Minute, .Second, .Nanosecond]
                 let components = calendar.components(units, fromDate: date)
                 
                 XCTAssertEqual(components.year, 2015, "Date: years not equal")

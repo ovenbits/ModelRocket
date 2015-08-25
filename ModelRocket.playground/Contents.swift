@@ -37,10 +37,10 @@ if let vehicle = Vehicle(strictJSON: json) {
     vehicle.year[]
     
     for color in vehicle.availableColors {
-        println("Color: \(color)")
+        print("Color: \(color)")
     }
     
     for (key, value) in vehicle.availableTrims {
-        println("Trim \(key) : \(value)")
+        print("Trim \(key) : \(value)")
     }
 }

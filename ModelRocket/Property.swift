@@ -23,7 +23,7 @@
 import Foundation
 
 final public class Property<T : JSONTransformable>: PropertyDescription {
-    typealias PropertyType = T
+    public typealias PropertyType = T
     
     /// Backing store for property data
     public var value: PropertyType?
@@ -62,9 +62,8 @@ final public class Property<T : JSONTransformable>: PropertyDescription {
     public func fromJSON(json: JSON) -> Bool {
         var jsonValue = json
         
-        let keyPaths = key.componentsSeparatedByString(".")
-        for key in keyPaths {
-            jsonValue = jsonValue[key]
+        key.componentsSeparatedByString(".").forEach {
+            jsonValue = jsonValue[$0]
         }
         
         if let newValue = PropertyType.fromJSON(jsonValue) as? PropertyType {
@@ -100,9 +99,9 @@ final public class Property<T : JSONTransformable>: PropertyDescription {
     }
 }
 
-// MARK:- Printable
+// MARK:- CustomStringConvertible
 
-extension Property: Printable {
+extension Property: CustomStringConvertible {
     public var description: String {
         
         var string = "Property<\(type)> (key: \(key), value: "
@@ -118,9 +117,9 @@ extension Property: Printable {
     }
 }
 
-// MARK:- DebugPrintable
+// MARK:- CustomDebugStringConvertible
 
-extension Property: DebugPrintable {
+extension Property: CustomDebugStringConvertible {
     public var debugDescription: String {
         return description
     }
