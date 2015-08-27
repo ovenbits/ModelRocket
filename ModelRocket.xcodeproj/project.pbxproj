@@ -18,7 +18,7 @@
 		81F54F681A82D5D9005C8275 /* PropertyDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F54F671A82D5D9005C8275 /* PropertyDescription.swift */; };
 		81F54F6B1A82D5E1005C8275 /* JSONTransformable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F54F6A1A82D5E1005C8275 /* JSONTransformable.swift */; };
 		81F54F6E1A82D5ED005C8275 /* Property.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F54F6D1A82D5ED005C8275 /* Property.swift */; };
-		81F54F711A82D5F5005C8275 /* ModelRocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F54F701A82D5F5005C8275 /* ModelRocket.swift */; };
+		81F54F711A82D5F5005C8275 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F54F701A82D5F5005C8275 /* Model.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,7 +46,7 @@
 		81F54F671A82D5D9005C8275 /* PropertyDescription.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PropertyDescription.swift; path = ../ModelRocket/PropertyDescription.swift; sourceTree = "<group>"; };
 		81F54F6A1A82D5E1005C8275 /* JSONTransformable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JSONTransformable.swift; path = ../ModelRocket/JSONTransformable.swift; sourceTree = "<group>"; };
 		81F54F6D1A82D5ED005C8275 /* Property.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Property.swift; path = ../ModelRocket/Property.swift; sourceTree = "<group>"; };
-		81F54F701A82D5F5005C8275 /* ModelRocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModelRocket.swift; path = ../ModelRocket/ModelRocket.swift; sourceTree = "<group>"; };
+		81F54F701A82D5F5005C8275 /* Model.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,7 +95,7 @@
 				81F54F6D1A82D5ED005C8275 /* Property.swift */,
 				810653281A847016004CA201 /* PropertyArray.swift */,
 				81629FCD1A95780100C2C42D /* PropertyDictionary.swift */,
-				81F54F701A82D5F5005C8275 /* ModelRocket.swift */,
+				81F54F701A82D5F5005C8275 /* Model.swift */,
 				81BECF191B8BBBF5000F08E9 /* JSON.swift */,
 				8143C8E41A82BA480077DE22 /* Supporting Files */,
 			);
@@ -242,7 +242,7 @@
 			files = (
 				810653291A847016004CA201 /* PropertyArray.swift in Sources */,
 				81BECF1A1B8BBBF5000F08E9 /* JSON.swift in Sources */,
-				81F54F711A82D5F5005C8275 /* ModelRocket.swift in Sources */,
+				81F54F711A82D5F5005C8275 /* Model.swift in Sources */,
 				81629FCE1A95780100C2C42D /* PropertyDictionary.swift in Sources */,
 				81F54F6B1A82D5E1005C8275 /* JSONTransformable.swift in Sources */,
 				81F54F6E1A82D5ED005C8275 /* Property.swift in Sources */,

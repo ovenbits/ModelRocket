@@ -1,4 +1,4 @@
-// ModelRocket.swift
+// Model.swift
 //
 // Copyright (c) 2015 Oven Bits, LLC
 //
@@ -22,7 +22,7 @@
 
 import Foundation
 
-public class ModelRocket: NSObject, NSCoding {
+public class Model: NSObject, NSCoding {
     
     private var JSONMappings: [PropertyDescription] {
         let mirror = Mirror(reflecting: self)
@@ -90,12 +90,12 @@ public class ModelRocket: NSObject, NSCoding {
         }
     }
     
-    public class func modelForJSON(json: JSON) -> ModelRocket {
-        return ModelRocket(json: json)
+    public class func modelForJSON(json: JSON) -> Model {
+        return Model(json: json)
     }
     
-    public class func modelForStrictJSON(json: JSON) -> ModelRocket? {
-        return ModelRocket(strictJSON: json)
+    public class func modelForStrictJSON(json: JSON) -> Model? {
+        return Model(strictJSON: json)
     }
     
     // MARK: JSON

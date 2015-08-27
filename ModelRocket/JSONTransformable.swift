@@ -33,9 +33,9 @@ public protocol JSONTransformable {
     func toJSON() -> AnyObject
 }
 
-// MARK: Default implementation for ModelRocket subclasses
+// MARK: Default implementation for Model subclasses
 
-extension JSONTransformable where Self: ModelRocket {
+extension JSONTransformable where Self: Model {
     public static func fromJSON(json: JSON) -> Self? {
         return Self(json: json)
     }
@@ -48,10 +48,7 @@ extension JSONTransformable where Self: ModelRocket {
 
 extension JSONTransformable where Self: RawRepresentable, Self.RawValue == String {
     public static func fromJSON(json: JSON) -> Self? {
-        if let string = json.string {
-            return Self(rawValue: string)
-        }
-        return nil
+        return Self(rawValue: json.stringValue)
     }
     public func toJSON() -> AnyObject {
         return rawValue
@@ -60,10 +57,7 @@ extension JSONTransformable where Self: RawRepresentable, Self.RawValue == Strin
 
 extension JSONTransformable where Self: RawRepresentable, Self.RawValue == Int {
     public static func fromJSON(json: JSON) -> Self? {
-        if let int = json.int {
-            return Self(rawValue: int)
-        }
-        return nil
+        return Self(rawValue: json.intValue)
     }
     public func toJSON() -> AnyObject {
         return rawValue

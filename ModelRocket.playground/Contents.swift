@@ -11,7 +11,7 @@ unwrapped safely, since the object will be created iff all properties where
 
 */
 
-class Vehicle: ModelRocket {
+class Vehicle: Model {
     let model = Property<String>(key: "model")
     let year = Property<Int>(key: "year")
     let color = Property<UIColor>(key: "color")

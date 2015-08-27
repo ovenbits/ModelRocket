@@ -492,7 +492,7 @@ class ModelRocketTests: XCTestCase {
 
 // MARK: - Models
 
-class TestModel: ModelRocket {
+class TestModel: Model {
     let string  = Property<String>(key: "string")
     let date    = Property<NSDate>(key: "date")
     let color   = Property<UIColor>(key: "color")
@@ -505,27 +505,27 @@ class TestModel: ModelRocket {
     let uInt    = Property<UInt>(key: "u_int")
 }
 
-class TestArrayModel: ModelRocket {
+class TestArrayModel: Model {
     let strings = PropertyArray<String>(key: "strings")
 }
 
-class TestDictionaryModel: ModelRocket {
+class TestDictionaryModel: Model {
     let ints = PropertyDictionary<Int>(key: "ints")
 }
 
-class TestSimpleNestedModel: ModelRocket {
+class TestSimpleNestedModel: Model {
     let nestedInt = Property<Int>(key: "nest1.nestedInt")
     let nestedString = Property<String>(key: "nest1.nest2.nestedString")
 }
 
-class TestComplexNestedModel: ModelRocket {
+class TestComplexNestedModel: Model {
     let int1 = Property<Int>(key: "int1")
     let int2 = Property<Int>(key: "nest1.nest2.int2")
     let string1 = Property<String>(key: "nest1.nest2.nest3.nest4.string1")
     let string2 = Property<String>(key: "nest1.string2")
 }
 
-class TestVeryComplexNestedModel: ModelRocket {
+class TestVeryComplexNestedModel: Model {
     let string1 = Property<String>(key: "nest1.nest2.nest3.nest4.string1")
     let string2 = Property<String>(key: "nest1.nest2.nest3.nest5.string2")
     let string3 = Property<String>(key: "nest1.nest2.nest6.nest7.string3")
@@ -536,7 +536,7 @@ class TestSubclassModel: TestModel {
     let string2 = Property<String>(key: "string2")
 }
 
-class TestRequiredModel: ModelRocket {
+class TestRequiredModel: Model {
     let requiredString = Property<String>(key: "required_string", required: true)
     let unrequiredInt = Property<Int>(key: "unrequired_int")
 }
