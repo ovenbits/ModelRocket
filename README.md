@@ -207,6 +207,33 @@ extension Manufacturer: JSONTransformable {
 }
 ```
 
+### Using an enum as a property
+
+ModelRocket supports enum types for `Property[Array|Dictionary]` properties, as long as the enum conforms to the `JSONTransformable` protocol.
+
+As a simple example, the material type of a vehicle's interior could use an enum like this:
+
+```swift
+enum VehicleInterior: String {
+    case Fabric = "fabric"
+    case Leather = "leather"
+}
+
+extension VehicleInterior: JSONTransformable {
+    static func fromJSON(json: JSON) -> VehicleInterior? {
+        return VehicleInterior(rawValue: json.stringValue)
+    }
+    func toJSON() -> AnyObject {
+        return rawValue
+    }
+}
+
+class Vehicle: ModelRocket {
+   let interior = Property<VehicleInterior>(key: "interior")
+}
+
+```
+
 ### Property `postProcess` hook
 
 The `Property` `postProcess` closure (also available on `PropertyArray` and `PropertyDictionary`) provides a mechanism for work to be done after all properties of a `ModelRocket` object have been initialized from JSON but before the `ModelRocket` object has finished initializing. 
