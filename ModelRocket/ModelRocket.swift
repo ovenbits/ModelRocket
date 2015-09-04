@@ -62,6 +62,10 @@ public class ModelRocket: NSObject, NSCoding {
     
     public required convenience init?(strictJSON: JSON) {
         self.init()
+
+        if strictJSON == nil {
+            return nil
+        }
         
         var valid = true
         
