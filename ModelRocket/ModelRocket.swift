@@ -66,18 +66,29 @@ public class ModelRocket: NSObject, NSCoding {
         var valid = true
         
         var debugString = "Initializing object of type: \(self.dynamicType)"
+
+        if strictJSON == nil {
+            #if DEBUG
+                debugString += "\n\tInitialization failed due to null JSON"
+            #else
+                break
+            #endif
+            valid = false
+        }
         
-        for map in JSONMappings {
-            let validObject = map.fromJSON(strictJSON)
-            
-            if map.required && !validObject {
-                valid = false
+        if valid {
+            for map in JSONMappings {
+                let validObject = map.fromJSON(strictJSON)
                 
-                #if DEBUG
-                    debugString += "\n\tProperty failed for key: \(map.key), type: \(map.type)"
-                #else
-                    break
-                #endif
+                if map.required && !validObject {
+                    valid = false
+                    
+                    #if DEBUG
+                        debugString += "\n\tProperty failed for key: \(map.key), type: \(map.type)"
+                    #else
+                        break
+                    #endif
+                }
             }
         }
         
