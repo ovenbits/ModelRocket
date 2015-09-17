@@ -48,13 +48,8 @@ public class Model: NSObject, NSCoding {
     
     public required convenience init(json: JSON) {
         self.init()
-        for map in JSONMappings {
-            map.fromJSON(json)
-        }
-        
-        for map in JSONMappings {
-            map.initPostProcess()
-        }
+        JSONMappings.forEach { $0.fromJSON(json) }
+        JSONMappings.forEach { $0.initPostProcess() }
     }
     
     public required convenience init?(strictJSON: JSON) {
@@ -78,16 +73,14 @@ public class Model: NSObject, NSCoding {
             }
         }
         
-        if !valid {
+        guard valid else {
             #if DEBUG
-                println(debugString)
+                print(debugString)
             #endif
             return nil
         }
         
-        for map in JSONMappings {
-            map.initPostProcess()
-        }
+        JSONMappings.forEach { $0.initPostProcess() }
     }
     
     public class func modelForJSON(json: JSON) -> Model {
@@ -101,13 +94,14 @@ public class Model: NSObject, NSCoding {
     // MARK: JSON
     
     private func subKeyPathDictionary(value value: AnyObject, keys: [String], index: Int, previousDictionary: AnyObject?) -> [String : AnyObject] {
+        
         if index == 0 {
             let key = keys[index]
-            if let previousDictionary = previousDictionary as? [String : AnyObject] {
-                return mergeDictionaries(previousDictionary, [key : value])
-            }
-            return [key : value]
+            guard let previousDictionary = previousDictionary as? [String : AnyObject] else { return [key : value] }
+            
+            return mergeDictionaries(previousDictionary, [key : value])
         }
+        
         return subKeyPathDictionary(value: [keys[index] : value], keys: keys, index: index-1, previousDictionary: previousDictionary)
     }
     
@@ -129,10 +123,8 @@ public class Model: NSObject, NSCoding {
                     dictionary[firstKeyPath] = subDictionary
                 }
             }
-            else {
-                if let value: AnyObject = map.toJSON() {
-                    dictionary[map.key] = value
-                }
+            else if let value: AnyObject = map.toJSON() {
+                dictionary[map.key] = value
             }
         }
         
@@ -149,16 +141,11 @@ public class Model: NSObject, NSCoding {
     
     public required convenience init?(coder aDecoder: NSCoder) {
         self.init()
-        
-        for map in JSONMappings {
-            map.decode(aDecoder)
-        }
+        JSONMappings.forEach { $0.decode(aDecoder) }
     }
     
     public func encodeWithCoder(aCoder: NSCoder) {
-        for map in JSONMappings {
-            map.encode(aCoder)
-        }
+        JSONMappings.forEach { $0.encode(aCoder) }
     }
     
     // MARK: Copying

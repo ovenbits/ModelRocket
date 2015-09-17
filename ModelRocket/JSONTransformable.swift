@@ -37,7 +37,7 @@ public protocol JSONTransformable {
 
 extension JSONTransformable where Self: Model {
     public static func fromJSON(json: JSON) -> Self? {
-        return Self(json: json)
+        return Self(strictJSON: json)
     }
     public func toJSON() -> AnyObject {
         return json().dictionary
@@ -148,7 +148,7 @@ extension NSURL: JSONTransformable {
         return json.URL
     }
     public func toJSON() -> AnyObject {
-        return absoluteString ?? ""
+        return absoluteString
     }
 }
 

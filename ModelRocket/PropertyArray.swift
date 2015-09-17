@@ -143,6 +143,10 @@ extension PropertyArray: Hashable {
 
 extension PropertyArray: Equatable {}
 
+public func ==<T: Equatable>(lhs: PropertyArray<T>, rhs: PropertyArray<T>) -> Bool {
+    return lhs.key == rhs.key && lhs.values == rhs.values
+}
+
 public func ==<T>(lhs: PropertyArray<T>, rhs: PropertyArray<T>) -> Bool {
     return lhs.key == rhs.key
 }

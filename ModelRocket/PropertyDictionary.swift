@@ -166,6 +166,10 @@ extension PropertyDictionary: Hashable {
 
 extension PropertyDictionary: Equatable {}
 
+public func ==<T: Equatable>(lhs: PropertyDictionary<T>, rhs: PropertyDictionary<T>) -> Bool {
+    return lhs.key == rhs.key && lhs.values == rhs.values
+}
+
 public func ==<T>(lhs: PropertyDictionary<T>, rhs: PropertyDictionary<T>) -> Bool {
     return lhs.key == rhs.key
 }

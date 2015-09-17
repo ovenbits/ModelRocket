@@ -69,6 +69,10 @@ public struct JSON {
             return JSON()
         }
     }
+    
+    public var isNil: Bool {
+        return (object == nil)
+    }
 }
 
 // MARK: - CustomStringConvertible
@@ -286,27 +290,29 @@ extension Dictionary {
 extension JSON: Equatable {}
 
 public func ==(lhs: JSON, rhs: JSON) -> Bool {
-    if let lhsObject: AnyObject = lhs.object, rhsObject: AnyObject = rhs.object {
-        switch (lhsObject, rhsObject) {
-        case (let left as String, let right as String):
-            return left == right
-        case (let left as Double, let right as Double):
-            return left == right
-        case (let left as Float, let right as Float):
-            return left == right
-        case (let left as Int, let right as Int):
-            return left == right
-        case (let left as UInt, let right as UInt):
-            return left == right
-        case (let left as Bool, let right as Bool):
-            return left == right
-        case (let left as [AnyObject], let right as [AnyObject]):
-            return left.map { JSON($0) } == right.map { JSON ($0) }
-        case (let left as [String : AnyObject], let right as [String : AnyObject]):
-            return Dictionary(left.map { ($0, JSON($1)) }) == Dictionary(right.map { ($0, JSON($1)) })
-        default: return false
-        }
-    }
+    guard let lhsObject: AnyObject = lhs.object, rhsObject: AnyObject = rhs.object else { return false }
 
-    return false
+    switch (lhsObject, rhsObject) {
+    case (let left as String, let right as String):
+        return left == right
+    case (let left as Double, let right as Double):
+        return left == right
+    case (let left as Float, let right as Float):
+        return left == right
+    case (let left as Int, let right as Int):
+        return left == right
+    case (let left as UInt, let right as UInt):
+        return left == right
+    case (let left as Bool, let right as Bool):
+        return left == right
+    case (let left as NSURL, let right as NSURL):
+        return left == right
+    case (let left as NSNumber, let right as NSNumber):
+        return left == right
+    case (let left as [AnyObject], let right as [AnyObject]):
+        return left.map { JSON($0) } == right.map { JSON ($0) }
+    case (let left as [String : AnyObject], let right as [String : AnyObject]):
+        return Dictionary(left.map { ($0, JSON($1)) }) == Dictionary(right.map { ($0, JSON($1)) })
+    default: return false
+    }
 }

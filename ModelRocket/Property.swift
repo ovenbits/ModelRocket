@@ -43,7 +43,8 @@ final public class Property<T : JSONTransformable>: PropertyDescription {
     public var required = false
     
     public subscript() -> PropertyType? {
-        return value
+        set { value = newValue }
+        get { return value }
     }
     
     // MARK: Initialization
@@ -136,6 +137,10 @@ extension Property: Hashable {
 // MARK:- Equatable
 
 extension Property: Equatable {}
+
+public func ==<T: Equatable>(lhs: Property<T>, rhs: Property<T>) -> Bool {
+    return lhs.key == rhs.key && lhs.value == rhs.value
+}
 
 public func ==<T>(lhs: Property<T>, rhs: Property<T>) -> Bool {
     return lhs.key == rhs.key
