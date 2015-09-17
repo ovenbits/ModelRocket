@@ -53,6 +53,10 @@ class JSONTests: XCTestCase {
         let data = NSData(contentsOfFile: path)
         let vehicleJSON = JSON(data: data)
         
+        // No data
+        let emptyJSON = JSON(data: nil)
+        XCTAssertTrue(emptyJSON.isNil, "JSON not nil")
+        
         // String
         XCTAssertEqual(vehicleJSON["make"].stringValue, "BMW")
         XCTAssertEqual(vehicleJSON["manufacturer"]["company_name"].stringValue, "Bayerische Motoren Werke AG")
@@ -110,6 +114,7 @@ class JSONTests: XCTestCase {
         var json = JSON()
         json["string"] = "Test String"
         json["int"] = 2
+        json["uInt"] = 4
         json["float"] = 5.5
         json["bool"] = true
         json["array"] = [1, 2, 3, 4, 5]
@@ -117,6 +122,7 @@ class JSONTests: XCTestCase {
         
         XCTAssertEqual(json["string"].string!, "Test String")
         XCTAssertEqual(json["int"].int!, 2)
+        XCTAssertEqual(json["uInt"].uInt!, 4)
         XCTAssertEqual(json["float"].float!, 5.5)
         XCTAssertEqual(json["bool"].bool!, true)
         XCTAssertEqual(json["array"].array!.map { $0.intValue }, [1, 2, 3, 4, 5])
@@ -177,6 +183,7 @@ class JSONTests: XCTestCase {
             "int" : 2,
             "float" : 5.5,
             "bool" : true,
+            "url" : "http://ovenbits.com",
             "array" : [1, 2, 3, 4, 5],
             "dictionary" : [
                 "string1" : "String 1",
@@ -190,6 +197,7 @@ class JSONTests: XCTestCase {
             "int" : 2,
             "float" : 5.5,
             "bool" : true,
+            "url" : "http://ovenbits.com",
             "array" : [1, 2, 3, 4, 5],
             "dictionary" : [
                 "string1" : "String 1",
@@ -198,13 +206,14 @@ class JSONTests: XCTestCase {
             ]
         ]
         
-        XCTAssertEqual(lhs["string"], rhs["string"])
-        XCTAssertEqual(lhs["int"], rhs["int"])
-        XCTAssertEqual(lhs["float"], rhs["float"])
-        XCTAssertEqual(lhs["bool"], rhs["bool"])
-        XCTAssertEqual(lhs["array"], rhs["array"])
-        XCTAssertEqual(lhs["dictionary"], rhs["dictionary"])
-        XCTAssertEqual(lhs, rhs)
+        XCTAssertTrue(lhs["string"] == rhs["string"])
+        XCTAssertTrue(lhs["int"] == rhs["int"])
+        XCTAssertTrue(lhs["float"] == rhs["float"])
+        XCTAssertTrue(lhs["bool"] == rhs["bool"])
+        XCTAssertTrue(lhs["url"].URL == rhs["url"].URL)
+        XCTAssertTrue(lhs["array"] == rhs["array"])
+        XCTAssertTrue(lhs["dictionary"] == rhs["dictionary"])
+        XCTAssertTrue(lhs == rhs)
     }
     
     // MARK: - String

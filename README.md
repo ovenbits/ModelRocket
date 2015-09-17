@@ -65,8 +65,6 @@ Then, run `pod install`.
 
 ### Creating a custom object
 
-> NOTE: Due to a namespacing issue in v1.0 with the framework and the base model class (`ModelRocket`) having the same name, we decided to rename the `ModelRocket` class to simply `Model`. This change will be effective in the v1.1 release when Swift 2 is officially released. Hooray namespacing!
-
 ```swift
 class Vehicle: Model {
 	let make  = Property<String>(key: "make")
