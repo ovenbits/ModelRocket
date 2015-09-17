@@ -11,8 +11,8 @@ An iOS framework for creating JSON-based models. Written in Swift (because [it t
 ## Requirements
 
 - iOS 7.0+
-- Xcode 6.3
-- Swift 1.2
+- Xcode 7 beta 6+
+- Swift 2
 
 ## Installation
 
@@ -66,7 +66,7 @@ Then, run `pod install`.
 ### Creating a custom object
 
 ```swift
-class Vehicle: ModelRocket {
+class Vehicle: Model {
 	let make  = Property<String>(key: "make")
 	let model = Property<String>(key: "model", required: true)
 	let year  = Property<Int>(key: "year") { year in
@@ -77,7 +77,7 @@ class Vehicle: ModelRocket {
 	let color = Property<UIColor>(key: "color", defaultValue: UIColor.blackColor())
 }
 ```
-> NOTE: As with all Swift variables, `let` should always be used, unless `var` is absolutely needed. In the case of ModelRocket objects, `let` should be used for all `Property[Array|Dictionary]` properties, as it still allows the underlying `value` to be changed, unless you truly need to reassign the property
+> NOTE: As with all Swift variables, `let` should always be used, unless `var` is absolutely needed. In the case of Model objects, `let` should be used for all `Property[Array|Dictionary]` properties, as it still allows the underlying `value` to be changed, unless you truly need to reassign the property
 
 #### Supported Types
 
@@ -99,7 +99,7 @@ classes out of the box:
 ### Creating an object with a typed array
 
 ```swift
-class Vehicles: ModelRocket {
+class Vehicles: Model {
     let vehicles = PropertyArray<Vehicle>(key: "vehicles")
 }
 ```
@@ -157,7 +157,7 @@ if let make = vehicle.make.value {
 }
 ```
 
-ModelRocket objects also contain a failable initializer, which will only return an initialized object if all properties marked as `required = true` are non-nil.
+Model objects also contain a failable initializer, which will only return an initialized object if all properties marked as `required = true` are non-nil.
 
 ```swift
 // instantiate object, only if `json` contains a value for the `make` property
@@ -187,11 +187,11 @@ The custom object must conform to the JSONTransformable protocol by defining the
 
 
 ```swift
-class Vehicle: ModelRocket {
+class Vehicle: Model {
 	let manufacturer = Property<Manufacturer>(key: "manufacturer")
 }
 
-class Manufacturer: ModelRocket {
+class Manufacturer: Model {
     let companyName = Property<String>(key: "company_name")
     let headquarters = Property<String>(key: "headquarters")
     let founded = Property<NSDate>(key: "founded")
@@ -236,11 +236,11 @@ class Vehicle: ModelRocket {
 
 ### Property `postProcess` hook
 
-The `Property` `postProcess` closure (also available on `PropertyArray` and `PropertyDictionary`) provides a mechanism for work to be done after all properties of a `ModelRocket` object have been initialized from JSON but before the `ModelRocket` object has finished initializing. 
+The `Property` `postProcess` closure (also available on `PropertyArray` and `PropertyDictionary`) provides a mechanism for work to be done after all properties of a `Model` object have been initialized from JSON but before the `Model` object has finished initializing. 
 
 
 ```swift
-class Vehicles: ModelRocket {
+class Vehicles: Model {
     let vehicles = PropertyArray<Vehicle>(key: "vehicles") { (values) -> Void in
         for vehicle in values {
             println("postHook vehicle: \(vehicle.make.value!)")
@@ -283,24 +283,24 @@ This usage pattern enables:
 
 
 ### Implementing a class cluster
-Override the `modelForJSON(json: JSON) -> ModelRocket` function
+Override the `modelForJSON(json: JSON) -> Model` function
 
 ```swift
-class Vehicle: ModelRocket {
+class Vehicle: Model {
     let make = Property<String>(key: "make")
     let model = Property<String>(key: "model")
     let year = Property<Int>(key: "year")
     let color = Property<UIColor>(key: "color")
     let manufacturer = Property<Manufacturer>(key: "manufacturer")
     
-    override class func modelForJSON(json: JSON) -> ModelRocket {
+    override class func modelForJSON(json: JSON) -> Vehicle {
         
-        switch json["type"].string {
-        case .Some("car"):
+        switch json["type"].stringValue {
+        case "car":
             return Car(json: json)
-        case .Some("plane"):
+        case "plane":
             return Plane(json: json)
-        case .Some("bike"):
+        case "bike":
             return Bike(json: json)
         default:
             return Vehicle(json: json)
@@ -328,7 +328,7 @@ default:
 
 ### Obtaining the object's JSON representation
 
-Calling the `json()` function on a ModelRocket subclass returns a tuple containing:
+Calling the `json()` function on a Model subclass returns a tuple containing:
 
 - `dictionary: [String : AnyObject]`
 - `json: JSON`

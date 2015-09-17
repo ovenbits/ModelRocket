@@ -45,8 +45,8 @@ public protocol PropertyDescription {
     /// Encode object from NSCoder
     func decode(decoder: NSCoder)
     
-    /// After the whole ModelRocket object has been initialized and its Property properties initalized fromJSON(), 
+    /// After the whole Model object has been initialized and its Property properties initalized fromJSON(),
     /// invoked to permit further post-processing of the Property that may depend upon other information from the
-    /// whole of the ModelRocket object.
+    /// whole of the Model object.
     func initPostProcess()
 }

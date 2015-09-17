@@ -23,7 +23,7 @@
 import Foundation
 
 final public class PropertyDictionary<T : JSONTransformable>: PropertyDescription {
-    typealias PropertyType = T
+    public typealias PropertyType = T
     
     /// Backing store for property data
     public var values: [String : PropertyType] = [:]
@@ -42,15 +42,7 @@ final public class PropertyDictionary<T : JSONTransformable>: PropertyDescriptio
     /// Specify whether value is required
     public var required = false
     
-    public var count: Int {
-        return values.count
-    }
-    
-    public var isEmpty: Bool {
-        return values.isEmpty
-    }
-    
-    public var keys: LazyForwardCollection<MapCollectionView<[String : PropertyType], String>> {
+    public var keys: LazyMapCollection<[String : PropertyType], String> {
         return values.keys
     }
     
@@ -122,17 +114,17 @@ final public class PropertyDictionary<T : JSONTransformable>: PropertyDescriptio
     }
 }
 
-// MARK:- Printable
+// MARK:- CustomStringConvertible
 
-extension PropertyDictionary: Printable {
+extension PropertyDictionary: CustomStringConvertible {
     public var description: String {
         return "PropertyDictionary<\(type)> (key: \(key), count: \(values.count), required: \(required))"
     }
 }
 
-// MARK:- DebugPrintable
+// MARK:- CustomDebugStringConvertible
 
-extension PropertyDictionary: DebugPrintable {
+extension PropertyDictionary: CustomDebugStringConvertible {
     public var debugDescription: String {
         return description
     }
@@ -173,6 +165,10 @@ extension PropertyDictionary: Hashable {
 // MARK:- Equatable
 
 extension PropertyDictionary: Equatable {}
+
+public func ==<T: Equatable>(lhs: PropertyDictionary<T>, rhs: PropertyDictionary<T>) -> Bool {
+    return lhs.key == rhs.key && lhs.values == rhs.values
+}
 
 public func ==<T>(lhs: PropertyDictionary<T>, rhs: PropertyDictionary<T>) -> Bool {
     return lhs.key == rhs.key

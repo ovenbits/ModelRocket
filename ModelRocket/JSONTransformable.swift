@@ -33,6 +33,37 @@ public protocol JSONTransformable {
     func toJSON() -> AnyObject
 }
 
+// MARK: Default implementation for Model subclasses
+
+extension JSONTransformable where Self: Model {
+    public static func fromJSON(json: JSON) -> Self? {
+        return Self(strictJSON: json)
+    }
+    public func toJSON() -> AnyObject {
+        return json().dictionary
+    }
+}
+
+// MARK: Default implementation for RawRepresentable types
+
+extension JSONTransformable where Self: RawRepresentable, Self.RawValue == String {
+    public static func fromJSON(json: JSON) -> Self? {
+        return Self(rawValue: json.stringValue)
+    }
+    public func toJSON() -> AnyObject {
+        return rawValue
+    }
+}
+
+extension JSONTransformable where Self: RawRepresentable, Self.RawValue == Int {
+    public static func fromJSON(json: JSON) -> Self? {
+        return Self(rawValue: json.intValue)
+    }
+    public func toJSON() -> AnyObject {
+        return rawValue
+    }
+}
+
 // MARK: String
 
 extension String: JSONTransformable {
@@ -117,7 +148,7 @@ extension NSURL: JSONTransformable {
         return json.URL
     }
     public func toJSON() -> AnyObject {
-        return absoluteString ?? ""
+        return absoluteString
     }
 }
 

@@ -23,7 +23,7 @@
 import Foundation
 
 final public class PropertyArray<T : JSONTransformable>: PropertyDescription {
-    typealias PropertyType = T
+    public typealias PropertyType = T
     
     /// Backing store for property data
     public var values: [PropertyType] = []
@@ -41,18 +41,6 @@ final public class PropertyArray<T : JSONTransformable>: PropertyDescription {
     
     /// Specify whether value is required
     public var required = false
-
-    public var count: Int {
-        return values.count
-    }
-    
-    public var isEmpty: Bool {
-        return values.isEmpty
-    }
-    
-    public var first: PropertyType? {
-        return values.first
-    }
     
     public var last: PropertyType? {
         return values.last
@@ -73,28 +61,19 @@ final public class PropertyArray<T : JSONTransformable>: PropertyDescription {
     /// Extract object from JSON and return whether or not the value was extracted
     public func fromJSON(json: JSON) -> Bool {
         var jsonValue: JSON = json
-        let keyPaths = key.componentsSeparatedByString(".")
-        for key in keyPaths {
-            jsonValue = jsonValue[key]
+
+        key.componentsSeparatedByString(".").forEach {
+            jsonValue = jsonValue[$0]
         }
         
-        values.removeAll(keepCapacity: false)
-        for object in jsonValue.array ?? []  {
-            if let property = PropertyType.fromJSON(object) as? PropertyType {
-                values.append(property)
-            }
-        }
+        values = jsonValue.flatMap { PropertyType.fromJSON($0) as? PropertyType }
         
         return !values.isEmpty
     }
     
     /// Convert object to JSON
     public func toJSON() -> AnyObject? {
-        var jsonArray: [AnyObject] = []
-        for value in values {
-            jsonArray.append(value.toJSON())
-        }
-        return jsonArray
+        return values.map { $0.toJSON() }
     }
     
     /// Perform initialization post-processing
@@ -106,32 +85,27 @@ final public class PropertyArray<T : JSONTransformable>: PropertyDescription {
     
     /// Encode
     public func encode(coder: NSCoder) {
-        let objectArray = values.map { $0 as? AnyObject }.filter { $0 != nil }.map { $0! }
+        let objectArray = values.flatMap { $0 as? AnyObject }
         coder.encodeObject(objectArray, forKey: key)
     }
     
     public func decode(decoder: NSCoder) {
-        let decodedObjects = decoder.decodeObjectForKey(key) as? [AnyObject]
-        values.removeAll(keepCapacity: false)
-        for object in decodedObjects ?? [] {
-            if let value = object as? PropertyType {
-                values.append(value)
-            }
-        }
+        let decodedObjects = decoder.decodeObjectForKey(key) as? [AnyObject] ?? []
+        values = decodedObjects.flatMap { $0 as? PropertyType }
     }
 }
 
-// MARK:- Printable
+// MARK:- CustomStringConvertible
 
-extension PropertyArray: Printable {
+extension PropertyArray: CustomStringConvertible {
     public var description: String {
         return "PropertyArray<\(type)> (key: \(key), count: \(values.count), required: \(required))"
     }
 }
 
-// MARK:- DebugPrintable
+// MARK:- CustomDebugStringConvertible
 
-extension PropertyArray: DebugPrintable {
+extension PropertyArray: CustomDebugStringConvertible {
     public var debugDescription: String {
         return description
     }
@@ -157,14 +131,6 @@ extension PropertyArray: CollectionType {
     }
 }
 
-// MARK:- Sliceable
-
-extension PropertyArray: Sliceable {
-    public subscript (subRange: Range<Int>) -> ArraySlice<PropertyType> {
-        return values[subRange]
-    }
-}
-
 // MARK:- Hashable
 
 extension PropertyArray: Hashable {
@@ -176,6 +142,10 @@ extension PropertyArray: Hashable {
 // MARK:- Equatable
 
 extension PropertyArray: Equatable {}
+
+public func ==<T: Equatable>(lhs: PropertyArray<T>, rhs: PropertyArray<T>) -> Bool {
+    return lhs.key == rhs.key && lhs.values == rhs.values
+}
 
 public func ==<T>(lhs: PropertyArray<T>, rhs: PropertyArray<T>) -> Bool {
     return lhs.key == rhs.key

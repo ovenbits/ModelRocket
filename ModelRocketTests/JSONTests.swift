@@ -53,6 +53,10 @@ class JSONTests: XCTestCase {
         let data = NSData(contentsOfFile: path)
         let vehicleJSON = JSON(data: data)
         
+        // No data
+        let emptyJSON = JSON(data: nil)
+        XCTAssertTrue(emptyJSON.isNil, "JSON not nil")
+        
         // String
         XCTAssertEqual(vehicleJSON["make"].stringValue, "BMW")
         XCTAssertEqual(vehicleJSON["manufacturer"]["company_name"].stringValue, "Bayerische Motoren Werke AG")
@@ -110,6 +114,7 @@ class JSONTests: XCTestCase {
         var json = JSON()
         json["string"] = "Test String"
         json["int"] = 2
+        json["uInt"] = 4
         json["float"] = 5.5
         json["bool"] = true
         json["array"] = [1, 2, 3, 4, 5]
@@ -117,6 +122,7 @@ class JSONTests: XCTestCase {
         
         XCTAssertEqual(json["string"].string!, "Test String")
         XCTAssertEqual(json["int"].int!, 2)
+        XCTAssertEqual(json["uInt"].uInt!, 4)
         XCTAssertEqual(json["float"].float!, 5.5)
         XCTAssertEqual(json["bool"].bool!, true)
         XCTAssertEqual(json["array"].array!.map { $0.intValue }, [1, 2, 3, 4, 5])
@@ -177,6 +183,7 @@ class JSONTests: XCTestCase {
             "int" : 2,
             "float" : 5.5,
             "bool" : true,
+            "url" : "http://ovenbits.com",
             "array" : [1, 2, 3, 4, 5],
             "dictionary" : [
                 "string1" : "String 1",
@@ -190,6 +197,7 @@ class JSONTests: XCTestCase {
             "int" : 2,
             "float" : 5.5,
             "bool" : true,
+            "url" : "http://ovenbits.com",
             "array" : [1, 2, 3, 4, 5],
             "dictionary" : [
                 "string1" : "String 1",
@@ -198,19 +206,20 @@ class JSONTests: XCTestCase {
             ]
         ]
         
-        XCTAssertEqual(lhs["string"], rhs["string"])
-        XCTAssertEqual(lhs["int"], rhs["int"])
-        XCTAssertEqual(lhs["float"], rhs["float"])
-        XCTAssertEqual(lhs["bool"], rhs["bool"])
-        XCTAssertEqual(lhs["array"], rhs["array"])
-        XCTAssertEqual(lhs["dictionary"], rhs["dictionary"])
-        XCTAssertEqual(lhs, rhs)
+        XCTAssertTrue(lhs["string"] == rhs["string"])
+        XCTAssertTrue(lhs["int"] == rhs["int"])
+        XCTAssertTrue(lhs["float"] == rhs["float"])
+        XCTAssertTrue(lhs["bool"] == rhs["bool"])
+        XCTAssertTrue(lhs["url"].URL == rhs["url"].URL)
+        XCTAssertTrue(lhs["array"] == rhs["array"])
+        XCTAssertTrue(lhs["dictionary"] == rhs["dictionary"])
+        XCTAssertTrue(lhs == rhs)
     }
     
     // MARK: - String
     
     func testStringLiteralConvertible() {
-        var json: JSON = "abcdefg"
+        let json: JSON = "abcdefg"
         
         XCTAssertEqual(json.string!, "abcdefg")
         XCTAssertEqual(json.stringValue, "abcdefg")
@@ -229,7 +238,7 @@ class JSONTests: XCTestCase {
         XCTAssertNil(json["string2"].string)
         XCTAssertEqual(json["string2"].stringValue, "")
         
-        // Printable
+        // CustomStringConvertible
         XCTAssertEqual(json["string"].description, "Test string")
         XCTAssertEqual(json["string"].debugDescription, "Test string")
     }
@@ -249,7 +258,7 @@ class JSONTests: XCTestCase {
         XCTAssertNil(json["number2"].number)
         XCTAssertEqual(json["number2"].numberValue, 0)
         
-        // Printable
+        // CustomStringConvertible
         XCTAssertEqual(json["number"].description, "3")
         XCTAssertEqual(json["number"].debugDescription, "3")
     }
@@ -257,7 +266,7 @@ class JSONTests: XCTestCase {
     // MARK: - Float
     
     func testFloatLiteralConvertible() {
-        var json: JSON = 1.234
+        let json: JSON = 1.234
         
         XCTAssertEqual(json.float!, 1.234)
         XCTAssertEqual(json.floatValue, 1.234)
@@ -276,7 +285,7 @@ class JSONTests: XCTestCase {
         XCTAssertNil(json["float2"].float)
         XCTAssertEqual(json["float2"].floatValue, 0)
         
-        // Printable
+        // CustomStringConvertible
         XCTAssertEqual(json["float"].description, "4.75")
         XCTAssertEqual(json["float"].debugDescription, "4.75")
     }
@@ -296,7 +305,7 @@ class JSONTests: XCTestCase {
         XCTAssertNil(json["double2"].double)
         XCTAssertEqual(json["double2"].doubleValue, 0)
         
-        // Printable
+        // CustomStringConvertible
         XCTAssertEqual(json["double"].description, "7.5")
         XCTAssertEqual(json["double"].debugDescription, "7.5")
     }
@@ -304,7 +313,7 @@ class JSONTests: XCTestCase {
     // MARK: - Int
     
     func testIntegerLiteralConvertible() {
-        var json: JSON = -2
+        let json: JSON = -2
         
         XCTAssertEqual(json.int!, -2)
         XCTAssertEqual(json.intValue, -2)
@@ -323,7 +332,7 @@ class JSONTests: XCTestCase {
         XCTAssertNil(json["int2"].int)
         XCTAssertEqual(json["int2"].intValue, 0)
         
-        // Printable
+        // CustomStringConvertible
         XCTAssertEqual(json["int"].description, "-23")
         XCTAssertEqual(json["int"].debugDescription, "-23")
     }
@@ -342,7 +351,7 @@ class JSONTests: XCTestCase {
         XCTAssertNil(json["u_int2"].uInt)
         XCTAssertEqual(json["u_int2"].uIntValue, 0)
         
-        // Printable
+        // CustomStringConvertible
         XCTAssertEqual(json["u_int"].description, "25")
         XCTAssertEqual(json["u_int"].debugDescription, "25")
     }
@@ -350,7 +359,7 @@ class JSONTests: XCTestCase {
     // MARK: - Bool
     
     func testBooleanLiteralConvertible() {
-        var json: JSON = true
+        let json: JSON = true
         
         XCTAssertTrue(json.bool!)
         XCTAssertTrue(json.boolValue)
@@ -369,7 +378,7 @@ class JSONTests: XCTestCase {
         XCTAssertNil(json["bool2"].bool)
         XCTAssertEqual(json["bool2"].boolValue, false)
         
-        // Printable
+        // CustomStringConvertible
         XCTAssertEqual(json["bool"].description, "1")
         XCTAssertEqual(json["bool"].debugDescription, "1")
     }
@@ -386,7 +395,7 @@ class JSONTests: XCTestCase {
         // Missing value
         XCTAssertNil(json["url2"].URL)
         
-        // Printable
+        // CustomStringConvertible
         XCTAssertEqual(json["url"].description, "http://ovenbits.com")
         XCTAssertEqual(json["url"].debugDescription, "http://ovenbits.com")
     }
@@ -394,7 +403,7 @@ class JSONTests: XCTestCase {
     // MARK: - Array
     
     func testArrayLiteralConvertible() {
-        var json: JSON = [1, 2, 3, 4, 5]
+        let json: JSON = [1, 2, 3, 4, 5]
         
         XCTAssertEqual(json[0].intValue, 1)
         XCTAssertEqual(json[1].intValue, 2)

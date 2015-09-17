@@ -23,7 +23,7 @@
 import Foundation
 
 final public class Property<T : JSONTransformable>: PropertyDescription {
-    typealias PropertyType = T
+    public typealias PropertyType = T
     
     /// Backing store for property data
     public var value: PropertyType?
@@ -43,7 +43,8 @@ final public class Property<T : JSONTransformable>: PropertyDescription {
     public var required = false
     
     public subscript() -> PropertyType? {
-        return value
+        set { value = newValue }
+        get { return value }
     }
     
     // MARK: Initialization
@@ -62,9 +63,8 @@ final public class Property<T : JSONTransformable>: PropertyDescription {
     public func fromJSON(json: JSON) -> Bool {
         var jsonValue = json
         
-        let keyPaths = key.componentsSeparatedByString(".")
-        for key in keyPaths {
-            jsonValue = jsonValue[key]
+        key.componentsSeparatedByString(".").forEach {
+            jsonValue = jsonValue[$0]
         }
         
         if let newValue = PropertyType.fromJSON(jsonValue) as? PropertyType {
@@ -100,9 +100,9 @@ final public class Property<T : JSONTransformable>: PropertyDescription {
     }
 }
 
-// MARK:- Printable
+// MARK:- CustomStringConvertible
 
-extension Property: Printable {
+extension Property: CustomStringConvertible {
     public var description: String {
         
         var string = "Property<\(type)> (key: \(key), value: "
@@ -118,9 +118,9 @@ extension Property: Printable {
     }
 }
 
-// MARK:- DebugPrintable
+// MARK:- CustomDebugStringConvertible
 
-extension Property: DebugPrintable {
+extension Property: CustomDebugStringConvertible {
     public var debugDescription: String {
         return description
     }
@@ -137,6 +137,10 @@ extension Property: Hashable {
 // MARK:- Equatable
 
 extension Property: Equatable {}
+
+public func ==<T: Equatable>(lhs: Property<T>, rhs: Property<T>) -> Bool {
+    return lhs.key == rhs.key && lhs.value == rhs.value
+}
 
 public func ==<T>(lhs: Property<T>, rhs: Property<T>) -> Bool {
     return lhs.key == rhs.key

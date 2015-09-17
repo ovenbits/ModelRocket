@@ -40,7 +40,7 @@ class ModelRocketTests: XCTestCase {
         // Put setup code here. This method is called before the invocation of each test method in the class.
         
         // Setup test model
-        var jsonString = "{\"string\" : \"Test string\", \"date\" : \"2015-02-04T18:30:15.000Z\", \"color\" : \"#00FF00\", \"bool\" : true, \"url\" : \"http://ovenbits.com\", \"number\": 3, \"double\" : 7.5, \"float\" : 4.75, \"int\" : -23, \"u_int\" : 25}"
+        var jsonString = "{\"string\" : \"Test string\", \"date\" : \"2015-02-04T18:30:15.000Z\", \"color\" : \"#00FF00\", \"bool\" : true, \"url\" : \"http://ovenbits.com\", \"number\": 3, \"double\" : 7.5, \"float\" : 4.75, \"int\" : -23, \"u_int\" : 25, \"string_enum\" : \"String1\", \"int_enum\" : 0}"
         var jsonData = jsonString.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
         var json = JSON(data: jsonData!)
         testModel = TestModel(json: json)
@@ -93,6 +93,32 @@ class ModelRocketTests: XCTestCase {
         super.tearDown()
     }
     
+    func testProperty() {
+        XCTAssertEqual(testModel.string.type, "String", "Types not equal")
+        XCTAssertEqual(testModel.string[], "Test string")
+        XCTAssertEqual(testModel.string.hashValue, "string".hashValue, "Hash values not equal")
+    }
+    
+    func testEquatableProperty() {
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        let date = dateFormatter.dateFromString("2015-02-04T18:30:15.000Z")
+        
+        XCTAssertTrue(testModel.string == Property<String>(key: "string", defaultValue: "Test string"), "Properties not equal")
+        XCTAssertTrue(testModel.date == Property<NSDate>(key: "date", defaultValue: date), "Properties not equal")
+        XCTAssertTrue(testModel.color == Property<UIColor>(key: "color", defaultValue: .greenColor()), "Properties not equal")
+        XCTAssertTrue(testModel.bool == Property<Bool>(key: "bool", defaultValue: true), "Properties not equal")
+        XCTAssertTrue(testModel.url == Property<NSURL>(key: "url", defaultValue: NSURL(string: "http://ovenbits.com")), "Properties not equal")
+        XCTAssertTrue(testModel.number == Property<NSNumber>(key: "number", defaultValue: NSNumber(int: 3)), "Properties not equal")
+        XCTAssertTrue(testModel.double == Property<Double>(key: "double", defaultValue: 7.5), "Properties not equal")
+        XCTAssertTrue(testModel.float == Property<Float>(key: "float", defaultValue: 4.75), "Properties not equal")
+        XCTAssertTrue(testModel.int == Property<Int>(key: "int", defaultValue: -23), "Properties not equal")
+        XCTAssertTrue(testModel.uInt == Property<UInt>(key: "u_int", defaultValue: 25), "Properties not equal")
+        XCTAssertTrue(testModel.stringEnum == Property<TestStringEnum>(key: "string_enum", defaultValue: .String1), "Properties not equal")
+        XCTAssertTrue(testModel.intEnum == Property<TestIntEnum>(key: "int_enum", defaultValue: .Int1), "Properties not equal")
+        XCTAssertFalse(testModel.string == Property<String>(key: "string", defaultValue: "Test string here"), "Properties shouldn't be equal")
+    }
+    
     func testString() {
         if let string = testModel.string.value {
             XCTAssertEqual(string, "Test string", "Strings not equal")
@@ -106,7 +132,7 @@ class ModelRocketTests: XCTestCase {
         if let date = testModel.date.value {
             
             let calendar = NSCalendar.currentCalendar()
-            let units: NSCalendarUnit = .CalendarUnitYear | .CalendarUnitMonth | .CalendarUnitDay | .CalendarUnitHour | .CalendarUnitMinute | .CalendarUnitSecond | .CalendarUnitNanosecond
+            let units: NSCalendarUnit = [.Year, .Month, .Day, .Hour, .Minute, .Second, .Nanosecond]
             let components = calendar.components(units, fromDate: date)
             
             XCTAssertEqual(components.year, 2015, "Date: years not equal")
@@ -141,7 +167,7 @@ class ModelRocketTests: XCTestCase {
     
     func testURL() {
         if let url = testModel.url.value {
-            XCTAssertEqual(url, NSURL(string: "http://ovenbits.com")!, "URLs not equal")
+            XCTAssertEqual(url, NSURL(string: "http://ovenbits.com"), "URLs not equal")
         }
         else {
             XCTAssert(false, "Test URL should not be nil")
@@ -201,7 +227,7 @@ class ModelRocketTests: XCTestCase {
             XCTAssertEqual(json["bool"].boolValue, true, "Bools not equal")
             
             if let url = json["url"].URL {
-                XCTAssertEqual(url, NSURL(string: "http://ovenbits.com")!, "URLs not equal")
+                XCTAssertEqual(url, NSURL(string: "http://ovenbits.com"), "URLs not equal")
             }
             else {
                 XCTAssert(false, "URL should not be nil")
@@ -228,7 +254,7 @@ class ModelRocketTests: XCTestCase {
             
             if let date = unarchived.date.value {
                 let calendar = NSCalendar.currentCalendar()
-                let units: NSCalendarUnit = .CalendarUnitYear | .CalendarUnitMonth | .CalendarUnitDay | .CalendarUnitHour | .CalendarUnitMinute | .CalendarUnitSecond | .CalendarUnitNanosecond
+                let units: NSCalendarUnit = [.Year, .Month, .Day, .Hour, .Minute, .Second, .Nanosecond]
                 let components = calendar.components(units, fromDate: date)
                 
                 XCTAssertEqual(components.year, 2015, "Date: years not equal")
@@ -248,7 +274,7 @@ class ModelRocketTests: XCTestCase {
             if let bool = unarchived.bool.value { XCTAssertEqual(bool, true, "Bools not equal") }
             else { XCTAssert(false, "Coding: bool should not be nil") }
             
-            if let url = unarchived.url.value { XCTAssertEqual(url, NSURL(string: "http://ovenbits.com")!, "URLs not equal") }
+            if let url = unarchived.url.value { XCTAssertEqual(url, NSURL(string: "http://ovenbits.com"), "URLs not equal") }
             else { XCTAssert(false, "Coding: url should not be nil") }
             
             if let number = unarchived.number.value { XCTAssertEqual(number, NSNumber(int: 3), "Numbers not equal") }
@@ -277,6 +303,19 @@ class ModelRocketTests: XCTestCase {
         XCTAssertEqual(testArrayModel.strings.values[1], "string2", "Strings not equal")
         XCTAssertEqual(testArrayModel.strings.values[2], "string3", "Strings not equal")
         XCTAssertEqual(testArrayModel.strings.values[3], "string4", "Strings not equal")
+        
+        XCTAssertEqual(testArrayModel.strings.type, "String", "Types not equal")
+        XCTAssertEqual(testArrayModel.strings.count, 4, "Counts not equal")
+        XCTAssertEqual(testArrayModel.strings[0], "string1", "Strings not equal")
+        XCTAssertEqual(testArrayModel.strings.first, "string1", "Strings not equal")
+        XCTAssertEqual(testArrayModel.strings.last, "string4", "Strings not equal")
+        XCTAssertEqual(testArrayModel.strings.hashValue, "strings".hashValue, "Hash values not equal")
+        
+        let property = PropertyArray<String>(key: "strings", defaultValues: ["string1", "string2", "string3", "string4"])
+        XCTAssertTrue(testArrayModel.strings == property, "Properties not equal")
+        
+        property.values = ["string1"]
+        XCTAssertFalse(testArrayModel.strings == property, "Properties shouldn't be equal")
     }
     
     func testArrayJSON() {
@@ -341,6 +380,17 @@ class ModelRocketTests: XCTestCase {
         
         if let int3 = testDictionaryModel.ints.values["int3"] { XCTAssertEqual(int3, 3, "Ints not equal") }
         else { XCTAssert(false, "Dictionary: int1 should not be nil") }
+        
+        XCTAssertEqual(testDictionaryModel.ints.type, "Int", "Type not equal")
+        XCTAssertEqual(testDictionaryModel.ints.count, 3, "Counts not equal")
+        XCTAssertEqual(testDictionaryModel.ints["int1"], 1, "Ints not equal")
+        XCTAssertEqual(testDictionaryModel.ints.hashValue, "ints".hashValue, "Hash values not equal")
+        
+        let property = PropertyDictionary<Int>(key: "ints", defaultValues: ["int1" : 1, "int2" : 2, "int3" : 3])
+        XCTAssertTrue(testDictionaryModel.ints == property, "Properties not equal")
+        
+        property.values = ["int1" : 1]
+        XCTAssertFalse(testDictionaryModel.ints == property, "Properties shouldn't be equal")
     }
     
     func testDictionaryJSON() {
@@ -430,7 +480,7 @@ class ModelRocketTests: XCTestCase {
             XCTAssertEqual(json["bool"].boolValue, true, "Bools not equal")
             
             if let jsonURL = json["url"].URL {
-                XCTAssertEqual(jsonURL, NSURL(string: "http://ovenbits.com")!, "URLs not equal")
+                XCTAssertEqual(jsonURL, NSURL(string: "http://ovenbits.com"), "URLs not equal")
             }
             else {
                 XCTAssert(false, "URL should not be nil")
@@ -488,44 +538,67 @@ class ModelRocketTests: XCTestCase {
         }
     }
     
+    func testStringEnumTransformable() {
+        XCTAssertEqual(TestStringEnum.fromJSON("String1"), TestStringEnum.String1)
+        XCTAssertEqual(TestStringEnum.fromJSON("String2"), TestStringEnum.String2)
+        
+        let string1 = TestStringEnum.String1.toJSON() as! String
+        XCTAssertEqual(string1, "String1")
+        
+        let string2 = TestStringEnum.String2.toJSON() as! String
+        XCTAssertEqual(string2, "String2")
+    }
+    
+    func testIntEnumTransformable() {
+        XCTAssertEqual(TestIntEnum.fromJSON(0), TestIntEnum.Int1)
+        XCTAssertEqual(TestIntEnum.fromJSON(1), TestIntEnum.Int2)
+        
+        let int1 = TestIntEnum.Int1.toJSON() as! Int
+        XCTAssertEqual(int1, 0)
+        
+        let int2 = TestIntEnum.Int2.toJSON() as! Int
+        XCTAssertEqual(int2, 1)
+    }
 }
 
 // MARK: - Models
 
-class TestModel: ModelRocket {
-    let string  = Property<String>(key: "string")
-    let date    = Property<NSDate>(key: "date")
-    let color   = Property<UIColor>(key: "color")
-    let bool    = Property<Bool>(key: "bool")
-    let url     = Property<NSURL>(key: "url")
-    let number  = Property<NSNumber>(key: "number")
-    let double  = Property<Double>(key: "double")
-    let float   = Property<Float>(key: "float")
-    let int     = Property<Int>(key: "int")
-    let uInt    = Property<UInt>(key: "u_int")
+class TestModel: Model {
+    let string      = Property<String>(key: "string")
+    let date        = Property<NSDate>(key: "date")
+    let color       = Property<UIColor>(key: "color")
+    let bool        = Property<Bool>(key: "bool")
+    let url         = Property<NSURL>(key: "url")
+    let number      = Property<NSNumber>(key: "number")
+    let double      = Property<Double>(key: "double")
+    let float       = Property<Float>(key: "float")
+    let int         = Property<Int>(key: "int")
+    let uInt        = Property<UInt>(key: "u_int")
+    let stringEnum  = Property<TestStringEnum>(key: "string_enum")
+    let intEnum     = Property<TestIntEnum>(key: "int_enum")
 }
 
-class TestArrayModel: ModelRocket {
+class TestArrayModel: Model {
     let strings = PropertyArray<String>(key: "strings")
 }
 
-class TestDictionaryModel: ModelRocket {
+class TestDictionaryModel: Model {
     let ints = PropertyDictionary<Int>(key: "ints")
 }
 
-class TestSimpleNestedModel: ModelRocket {
+class TestSimpleNestedModel: Model {
     let nestedInt = Property<Int>(key: "nest1.nestedInt")
     let nestedString = Property<String>(key: "nest1.nest2.nestedString")
 }
 
-class TestComplexNestedModel: ModelRocket {
+class TestComplexNestedModel: Model {
     let int1 = Property<Int>(key: "int1")
     let int2 = Property<Int>(key: "nest1.nest2.int2")
     let string1 = Property<String>(key: "nest1.nest2.nest3.nest4.string1")
     let string2 = Property<String>(key: "nest1.string2")
 }
 
-class TestVeryComplexNestedModel: ModelRocket {
+class TestVeryComplexNestedModel: Model {
     let string1 = Property<String>(key: "nest1.nest2.nest3.nest4.string1")
     let string2 = Property<String>(key: "nest1.nest2.nest3.nest5.string2")
     let string3 = Property<String>(key: "nest1.nest2.nest6.nest7.string3")
@@ -536,7 +609,15 @@ class TestSubclassModel: TestModel {
     let string2 = Property<String>(key: "string2")
 }
 
-class TestRequiredModel: ModelRocket {
+class TestRequiredModel: Model {
     let requiredString = Property<String>(key: "required_string", required: true)
     let unrequiredInt = Property<Int>(key: "unrequired_int")
+}
+
+enum TestStringEnum: String, JSONTransformable {
+    case String1, String2
+}
+
+enum TestIntEnum: Int, JSONTransformable {
+    case Int1, Int2
 }

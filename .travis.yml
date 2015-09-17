@@ -1,8 +1,4 @@
 language: objective-c
-osx_image: xcode6.4
-# blacklist
-branches:
-  except:
-    - swift2
+osx_image: xcode7
 script:
-    - xcodebuild -project ModelRocket.xcodeproj -scheme ModelRocket -sdk iphonesimulator8.4 test
+    - xcodebuild -project ModelRocket.xcodeproj -scheme ModelRocket -sdk iphonesimulator9.0 test
