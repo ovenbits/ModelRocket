@@ -436,6 +436,16 @@ class JSONTests: XCTestCase {
         XCTAssertEqual(json["array"][0].intValue, 1)
     }
     
+    // MARK: - NSNull (from loaded data)
+    
+    func testNSNull() {
+        let jsonPath = NSBundle(forClass: self.dynamicType).pathForResource("Tests", ofType: "json")
+        let jsonData = NSData(contentsOfFile: jsonPath!)
+        let json = JSON(data: jsonData)
+        
+        XCTAssertTrue(json["driver"].isNull)
+    }
+    
     // MARK: - Dictionary
     
     func testDictionaryLiteralConvertible() {

@@ -285,6 +285,14 @@ extension Dictionary {
     }
 }
 
+// MARK: - NSNull
+
+extension JSON {
+    public var isNull: Bool {
+        return object is NSNull
+    }
+}
+
 // MARK: - Equatable
 
 extension JSON: Equatable {}
