@@ -293,11 +293,6 @@ extension Dictionary {
     }
 }
 
-// MARK: - NSNull
-
-extension JSON {
-}
-
 // MARK: - Equatable
 
 extension JSON: Equatable {}
