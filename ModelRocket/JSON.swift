@@ -70,8 +70,16 @@ public struct JSON {
         }
     }
     
-    public var isNil: Bool {
+    @available(*, deprecated=1.2, message="Use !hasKey instead.") public var isNil: Bool {
         return (object == nil)
+    }
+    
+    public var hasKey: Bool {
+        return object != nil
+    }
+    
+    public var hasValue: Bool {
+        return !(object is NSNull)
     }
 }
 
@@ -288,9 +296,6 @@ extension Dictionary {
 // MARK: - NSNull
 
 extension JSON {
-    public var isNull: Bool {
-        return object is NSNull
-    }
 }
 
 // MARK: - Equatable

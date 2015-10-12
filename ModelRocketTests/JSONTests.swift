@@ -55,7 +55,7 @@ class JSONTests: XCTestCase {
         
         // No data
         let emptyJSON = JSON(data: nil)
-        XCTAssertTrue(emptyJSON.isNil, "JSON not nil")
+        XCTAssertFalse(emptyJSON.hasKey, "JSON not nil")
         
         // String
         XCTAssertEqual(vehicleJSON["make"].stringValue, "BMW")
@@ -443,7 +443,7 @@ class JSONTests: XCTestCase {
         let jsonData = NSData(contentsOfFile: jsonPath!)
         let json = JSON(data: jsonData)
         
-        XCTAssertTrue(json["driver"].isNull)
+        XCTAssertFalse(json["driver"].hasValue)
     }
     
     // MARK: - Dictionary
