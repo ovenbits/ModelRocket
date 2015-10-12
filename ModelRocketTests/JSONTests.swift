@@ -56,6 +56,7 @@ class JSONTests: XCTestCase {
         // No data
         let emptyJSON = JSON(data: nil)
         XCTAssertFalse(emptyJSON.hasKey, "JSON not nil")
+        XCTAssertFalse(emptyJSON.hasValue, "JSON does not have value")
         
         // String
         XCTAssertEqual(vehicleJSON["make"].stringValue, "BMW")

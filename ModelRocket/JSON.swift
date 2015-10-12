@@ -79,7 +79,7 @@ public struct JSON {
     }
     
     public var hasValue: Bool {
-        return !(object is NSNull)
+        return object != nil && !(object is NSNull)
     }
 }
 
