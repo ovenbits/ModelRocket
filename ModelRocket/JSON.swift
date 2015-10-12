@@ -70,8 +70,16 @@ public struct JSON {
         }
     }
     
-    public var isNil: Bool {
+    @available(*, deprecated=1.2, message="Use !hasKey instead.") public var isNil: Bool {
         return (object == nil)
+    }
+    
+    public var hasKey: Bool {
+        return object != nil
+    }
+    
+    public var hasValue: Bool {
+        return object != nil && !(object is NSNull)
     }
 }
 

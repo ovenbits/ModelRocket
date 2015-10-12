@@ -55,7 +55,8 @@ class JSONTests: XCTestCase {
         
         // No data
         let emptyJSON = JSON(data: nil)
-        XCTAssertTrue(emptyJSON.isNil, "JSON not nil")
+        XCTAssertFalse(emptyJSON.hasKey, "JSON is not nil")
+        XCTAssertFalse(emptyJSON.hasValue, "JSON has a value")
         
         // String
         XCTAssertEqual(vehicleJSON["make"].stringValue, "BMW")
@@ -434,6 +435,16 @@ class JSONTests: XCTestCase {
         XCTAssertEqual(json["array"].startIndex, 0)
         XCTAssertEqual(json["array"].endIndex, 5)
         XCTAssertEqual(json["array"][0].intValue, 1)
+    }
+    
+    // MARK: - NSNull (from loaded data)
+    
+    func testNSNull() {
+        let jsonPath = NSBundle(forClass: self.dynamicType).pathForResource("Tests", ofType: "json")
+        let jsonData = NSData(contentsOfFile: jsonPath!)
+        let json = JSON(data: jsonData)
+        
+        XCTAssertFalse(json["driver"].hasValue)
     }
     
     // MARK: - Dictionary
