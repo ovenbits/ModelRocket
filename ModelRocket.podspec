@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "ModelRocket"
-  s.version          = "1.1"
+  s.version          = "1.2"
   s.license          = "MIT"
   s.summary          = "An iOS framework for creating JSON-based models. Written in Swift."
   s.homepage         = "https://github.com/ovenbits/ModelRocket"
