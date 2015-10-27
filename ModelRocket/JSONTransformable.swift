@@ -37,7 +37,7 @@ public protocol JSONTransformable {
 
 extension JSONTransformable where Self: Model {
     public static func fromJSON(json: JSON) -> Self? {
-        return Self(strictJSON: json)
+        return self.init().dynamicType.init(strictJSON: json)
     }
     public func toJSON() -> AnyObject {
         return json().dictionary
