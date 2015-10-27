@@ -46,14 +46,14 @@ public class Model: NSObject, NSCoding {
         super.init()
     }
     
-    public required convenience init(json: JSON) {
-        self.init()
+    public required init(json: JSON) {
+        super.init()
         JSONMappings.forEach { $0.fromJSON(json) }
         JSONMappings.forEach { $0.initPostProcess() }
     }
     
-    public required convenience init?(strictJSON: JSON) {
-        self.init()
+    public required init?(strictJSON: JSON) {
+        super.init()
         
         var valid = true
         
