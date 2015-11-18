@@ -91,7 +91,7 @@ class Vehicle: Model {
 In addition to the core types above, ModelRocket also supports serialization for several other
 classes out of the box:
 
-- `NSDate` &mdash; ISO8601-formatted string (`2015-05-31T19:00:17+00:00`)
+- `NSDate` &mdash; ISO8601-formatted string (`2015-05-31T19:00:17.000+0000`)
 - `UIColor` &mdash; hex-color string (`#f6c500`)
 - `NSURL` &mdash; any url string (`http://ovenbits.com`)
 - `NSNumber` &mdash; any number, can be used in place of `Double`, `Float`, `Int`, and `UInt`

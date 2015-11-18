@@ -80,7 +80,9 @@ extension String: JSONTransformable {
 extension NSDate: JSONTransformable {
     private class var JSONTransformableDateFormatter: NSDateFormatter {
         let dateFormatter = NSDateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        dateFormatter.timeZone = NSTimeZone(forSecondsFromGMT: 0)
+        dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
         return dateFormatter
     }
     public class func fromJSON(json: JSON) -> NSDate? {

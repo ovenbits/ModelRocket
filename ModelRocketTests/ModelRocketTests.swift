@@ -40,7 +40,7 @@ class ModelRocketTests: XCTestCase {
         // Put setup code here. This method is called before the invocation of each test method in the class.
         
         // Setup test model
-        var jsonString = "{\"string\" : \"Test string\", \"date\" : \"2015-02-04T18:30:15.000Z\", \"color\" : \"#00FF00\", \"bool\" : true, \"url\" : \"http://ovenbits.com\", \"number\": 3, \"double\" : 7.5, \"float\" : 4.75, \"int\" : -23, \"u_int\" : 25, \"string_enum\" : \"String1\", \"int_enum\" : 0}"
+        var jsonString = "{\"string\" : \"Test string\", \"date\" : \"2015-02-04T18:30:15.000Z\", \"local_date\" : \"2015-02-04T18:30:15.000-0600\", \"color\" : \"#00FF00\", \"bool\" : true, \"url\" : \"http://ovenbits.com\", \"number\": 3, \"double\" : 7.5, \"float\" : 4.75, \"int\" : -23, \"u_int\" : 25, \"string_enum\" : \"String1\", \"int_enum\" : 0}"
         var jsonData = jsonString.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
         var json = JSON(data: jsonData!)
         testModel = TestModel(json: json)
@@ -76,7 +76,7 @@ class ModelRocketTests: XCTestCase {
         testVeryComplexNestedModel = TestVeryComplexNestedModel(json: json)
         
         // Setup test subclass model
-        jsonString = "{\"string\" : \"Test string\", \"date\" : \"2015-02-04T18:30:15.000Z\", \"color\" : \"#00FF00\", \"bool\" : true, \"url\" : \"http://ovenbits.com\", \"number\": 3, \"double\" : 7.5, \"float\" : 4.75, \"int\" : -23, \"u_int\" : 25, \"string2\" : \"Test string 2\"}"
+        jsonString = "{\"string\" : \"Test string\", \"date\" : \"2015-02-04T18:30:15.000Z\", \"local_date\" : \"2015-02-04T18:30:15.000-0600\", \"color\" : \"#00FF00\", \"bool\" : true, \"url\" : \"http://ovenbits.com\", \"number\": 3, \"double\" : 7.5, \"float\" : 4.75, \"int\" : -23, \"u_int\" : 25, \"string2\" : \"Test string 2\"}"
         jsonData = jsonString.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
         json = JSON(data: jsonData!)
         testSubclassModel = TestSubclassModel(json: json)
@@ -101,11 +101,13 @@ class ModelRocketTests: XCTestCase {
     
     func testEquatableProperty() {
         let dateFormatter = NSDateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
         let date = dateFormatter.dateFromString("2015-02-04T18:30:15.000Z")
+        let localDate = dateFormatter.dateFromString("2015-02-04T18:30:15.000-0600")
         
         XCTAssertTrue(testModel.string == Property<String>(key: "string", defaultValue: "Test string"), "Properties not equal")
         XCTAssertTrue(testModel.date == Property<NSDate>(key: "date", defaultValue: date), "Properties not equal")
+        XCTAssertTrue(testModel.localDate == Property<NSDate>(key: "local_date", defaultValue: localDate), "Properties not equal")
         XCTAssertTrue(testModel.color == Property<UIColor>(key: "color", defaultValue: .greenColor()), "Properties not equal")
         XCTAssertTrue(testModel.bool == Property<Bool>(key: "bool", defaultValue: true), "Properties not equal")
         XCTAssertTrue(testModel.url == Property<NSURL>(key: "url", defaultValue: NSURL(string: "http://ovenbits.com")), "Properties not equal")
@@ -132,6 +134,8 @@ class ModelRocketTests: XCTestCase {
         if let date = testModel.date.value {
             
             let calendar = NSCalendar.currentCalendar()
+            calendar.timeZone = NSTimeZone(forSecondsFromGMT: 0)
+            
             let units: NSCalendarUnit = [.Year, .Month, .Day, .Hour, .Minute, .Second, .Nanosecond]
             let components = calendar.components(units, fromDate: date)
             
@@ -139,6 +143,27 @@ class ModelRocketTests: XCTestCase {
             XCTAssertEqual(components.month, 2, "Date: months not equal")
             XCTAssertEqual(components.day, 4, "Date: days not equal")
             XCTAssertEqual(components.hour, 18, "Date: hours not equal")
+            XCTAssertEqual(components.minute, 30, "Date: minutes not equal")
+            XCTAssertEqual(components.second, 15, "Date: seconds not equal")
+        }
+        else {
+            XCTAssert(false, "Test date should not be nil")
+        }
+    }
+    
+    func testLocalDate() {
+        if let date = testModel.localDate.value {
+            
+            let calendar = NSCalendar.currentCalendar()
+            calendar.timeZone = NSTimeZone(forSecondsFromGMT: 0)
+            
+            let units: NSCalendarUnit = [.Year, .Month, .Day, .Hour, .Minute, .Second, .Nanosecond]
+            let components = calendar.components(units, fromDate: date)
+            
+            XCTAssertEqual(components.year, 2015, "Date: years not equal")
+            XCTAssertEqual(components.month, 2, "Date: months not equal")
+            XCTAssertEqual(components.day, 5, "Date: days not equal")
+            XCTAssertEqual(components.hour, 0, "Date: hours not equal")
             XCTAssertEqual(components.minute, 30, "Date: minutes not equal")
             XCTAssertEqual(components.second, 15, "Date: seconds not equal")
         }
@@ -222,7 +247,8 @@ class ModelRocketTests: XCTestCase {
     func testJSON() {
         if let json = testModel.json().json {
             XCTAssertEqual(json["string"].stringValue, "Test string", "Strings not equal")
-            XCTAssertEqual(json["date"].stringValue, "2015-02-04T18:30:15.000Z", "Dates not equal")
+            XCTAssertEqual(json["date"].stringValue, "2015-02-04T18:30:15.000+0000", "Dates not equal")
+            XCTAssertEqual(json["local_date"].stringValue, "2015-02-05T00:30:15.000+0000", "Dates not equal")
             XCTAssertEqual(json["color"].stringValue, "#00FF00", "Colors not equal")
             XCTAssertEqual(json["bool"].boolValue, true, "Bools not equal")
             
@@ -254,6 +280,8 @@ class ModelRocketTests: XCTestCase {
             
             if let date = unarchived.date.value {
                 let calendar = NSCalendar.currentCalendar()
+                calendar.timeZone = NSTimeZone(forSecondsFromGMT: 0)
+                
                 let units: NSCalendarUnit = [.Year, .Month, .Day, .Hour, .Minute, .Second, .Nanosecond]
                 let components = calendar.components(units, fromDate: date)
                 
@@ -261,6 +289,24 @@ class ModelRocketTests: XCTestCase {
                 XCTAssertEqual(components.month, 2, "Date: months not equal")
                 XCTAssertEqual(components.day, 4, "Date: days not equal")
                 XCTAssertEqual(components.hour, 18, "Date: hours not equal")
+                XCTAssertEqual(components.minute, 30, "Date: minutes not equal")
+                XCTAssertEqual(components.second, 15, "Date: seconds not equal")
+            }
+            else {
+                XCTAssert(false, "Coding: date should not be nil")
+            }
+            
+            if let date = unarchived.localDate.value {
+                let calendar = NSCalendar.currentCalendar()
+                calendar.timeZone = NSTimeZone(forSecondsFromGMT: 0)
+                
+                let units: NSCalendarUnit = [.Year, .Month, .Day, .Hour, .Minute, .Second, .Nanosecond]
+                let components = calendar.components(units, fromDate: date)
+                
+                XCTAssertEqual(components.year, 2015, "Date: years not equal")
+                XCTAssertEqual(components.month, 2, "Date: months not equal")
+                XCTAssertEqual(components.day, 5, "Date: days not equal")
+                XCTAssertEqual(components.hour, 0, "Date: hours not equal")
                 XCTAssertEqual(components.minute, 30, "Date: minutes not equal")
                 XCTAssertEqual(components.second, 15, "Date: seconds not equal")
             }
@@ -475,7 +521,8 @@ class ModelRocketTests: XCTestCase {
     func testSubclassJSON() {
         if let json = testSubclassModel.json().json {
             XCTAssertEqual(json["string"].stringValue, "Test string", "Strings not equal")
-            XCTAssertEqual(json["date"].stringValue, "2015-02-04T18:30:15.000Z", "Dates not equal")
+            XCTAssertEqual(json["date"].stringValue, "2015-02-04T18:30:15.000+0000", "Dates not equal")
+            XCTAssertEqual(json["local_date"].stringValue, "2015-02-05T00:30:15.000+0000", "Dates not equal")
             XCTAssertEqual(json["color"].stringValue, "#00FF00", "Colors not equal")
             XCTAssertEqual(json["bool"].boolValue, true, "Bools not equal")
             
@@ -566,6 +613,7 @@ class ModelRocketTests: XCTestCase {
 class TestModel: Model {
     let string      = Property<String>(key: "string")
     let date        = Property<NSDate>(key: "date")
+    let localDate   = Property<NSDate>(key: "local_date")
     let color       = Property<UIColor>(key: "color")
     let bool        = Property<Bool>(key: "bool")
     let url         = Property<NSURL>(key: "url")
