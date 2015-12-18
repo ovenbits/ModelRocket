@@ -1,6 +1,6 @@
 ![ModelRocket](https://s3.amazonaws.com/f.cl.ly/items/272x3d230n0Z3T300V1D/model-rocket.jpg)
 
-![Build Status](https://travis-ci.org/ovenbits/ModelRocket.svg)
+[![Build Status](https://travis-ci.org/ovenbits/ModelRocket.svg?branch=master)](https://travis-ci.org/ovenbits/ModelRocket)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 ![Cocoapods Compatible](https://img.shields.io/cocoapods/v/ModelRocket.svg)
 ![License](https://img.shields.io/badge/license-MIT-000000.svg)
