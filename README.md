@@ -61,6 +61,22 @@ pod 'ModelRocket'
 
 Then, run `pod install`.
 
+### Swift Package Manager
+The [Swift Package Manager](https://swift.org/package-manager) is a dependency management tool provided by Apple, still in early design and development. For more infomation check out its [GitHub Page](https://github.com/apple/swift-package-manager).
+
+You can use the Swift Package Manager to install `ModelRocket` by adding it as a dependency in your `Package.swift` file:
+```swift
+import PackageDescription
+
+let package = Package(
+    name: "PROJECT_NAME",
+    targets: [],
+    dependencies: [
+        .Package(url: "https://github.com/ovenbits/ModelRocket.git", versions: "1.2.3" ..< Version.max)
+    ]
+)
+```
+
 ## Usage
 
 ### Creating a custom object
