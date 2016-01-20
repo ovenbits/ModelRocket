@@ -1,4 +1,4 @@
 language: objective-c
 osx_image: xcode7.2
 script:
-    - xcodebuild -project ModelRocket.xcodeproj -scheme ModelRocket -sdk iphonesimulator9.2 test
+    - xcodebuild -project ModelRocket.xcodeproj -scheme ModelRocket -destination "platform=iOS Simulator,name=iPhone 6" test
