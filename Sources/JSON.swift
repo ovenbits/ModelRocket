@@ -45,9 +45,11 @@ public struct JSON {
     
     public subscript(key: String) -> JSON {
         set {
-            if var tempObject = object as? [String : AnyObject] {
-                tempObject[key] = newValue.object
-                self.object = tempObject
+            if let tempObject = object as? [String : AnyObject] {
+                var object = tempObject
+                
+                object[key] = newValue.object
+                self.object = object
             }
             else {
                 var tempObject: [String : AnyObject] = [:]

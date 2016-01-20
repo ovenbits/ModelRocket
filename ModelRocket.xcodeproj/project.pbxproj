@@ -7,18 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		810653291A847016004CA201 /* PropertyArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810653281A847016004CA201 /* PropertyArray.swift */; };
-		8143C8E71A82BA480077DE22 /* ModelRocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 8143C8E61A82BA480077DE22 /* ModelRocket.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8105B6DA1C4F319C0038F86D /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8105B6D11C4F319C0038F86D /* Info.plist */; };
+		8105B6DB1C4F319C0038F86D /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8105B6D21C4F319C0038F86D /* JSON.swift */; };
+		8105B6DC1C4F319C0038F86D /* JSONTransformable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8105B6D31C4F319C0038F86D /* JSONTransformable.swift */; };
+		8105B6DD1C4F319C0038F86D /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8105B6D41C4F319C0038F86D /* Model.swift */; };
+		8105B6DE1C4F319C0038F86D /* ModelRocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 8105B6D51C4F319C0038F86D /* ModelRocket.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8105B6DF1C4F319C0038F86D /* Property.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8105B6D61C4F319C0038F86D /* Property.swift */; };
+		8105B6E01C4F319C0038F86D /* PropertyArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8105B6D71C4F319C0038F86D /* PropertyArray.swift */; };
+		8105B6E11C4F319C0038F86D /* PropertyDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8105B6D81C4F319C0038F86D /* PropertyDescription.swift */; };
+		8105B6E21C4F319C0038F86D /* PropertyDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8105B6D91C4F319C0038F86D /* PropertyDictionary.swift */; };
 		8143C8ED1A82BA480077DE22 /* ModelRocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8143C8E11A82BA480077DE22 /* ModelRocket.framework */; };
 		8143C8F41A82BA480077DE22 /* ModelRocketTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8143C8F31A82BA480077DE22 /* ModelRocketTests.swift */; };
-		81629FCE1A95780100C2C42D /* PropertyDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81629FCD1A95780100C2C42D /* PropertyDictionary.swift */; };
-		81BECF1A1B8BBBF5000F08E9 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81BECF191B8BBBF5000F08E9 /* JSON.swift */; };
 		81BECF1C1B8BD943000F08E9 /* JSONTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81BECF1B1B8BD943000F08E9 /* JSONTests.swift */; };
 		81BECF1E1B8BD998000F08E9 /* Tests.json in Resources */ = {isa = PBXBuildFile; fileRef = 81BECF1D1B8BD998000F08E9 /* Tests.json */; };
-		81F54F681A82D5D9005C8275 /* PropertyDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F54F671A82D5D9005C8275 /* PropertyDescription.swift */; };
-		81F54F6B1A82D5E1005C8275 /* JSONTransformable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F54F6A1A82D5E1005C8275 /* JSONTransformable.swift */; };
-		81F54F6E1A82D5ED005C8275 /* Property.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F54F6D1A82D5ED005C8275 /* Property.swift */; };
-		81F54F711A82D5F5005C8275 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F54F701A82D5F5005C8275 /* Model.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,21 +33,21 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		810653281A847016004CA201 /* PropertyArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PropertyArray.swift; sourceTree = "<group>"; };
+		8105B6D11C4F319C0038F86D /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Sources/Info.plist; sourceTree = "<group>"; };
+		8105B6D21C4F319C0038F86D /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JSON.swift; path = Sources/JSON.swift; sourceTree = "<group>"; };
+		8105B6D31C4F319C0038F86D /* JSONTransformable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JSONTransformable.swift; path = Sources/JSONTransformable.swift; sourceTree = "<group>"; };
+		8105B6D41C4F319C0038F86D /* Model.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Model.swift; path = Sources/Model.swift; sourceTree = "<group>"; };
+		8105B6D51C4F319C0038F86D /* ModelRocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ModelRocket.h; path = Sources/ModelRocket.h; sourceTree = "<group>"; };
+		8105B6D61C4F319C0038F86D /* Property.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Property.swift; path = Sources/Property.swift; sourceTree = "<group>"; };
+		8105B6D71C4F319C0038F86D /* PropertyArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PropertyArray.swift; path = Sources/PropertyArray.swift; sourceTree = "<group>"; };
+		8105B6D81C4F319C0038F86D /* PropertyDescription.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PropertyDescription.swift; path = Sources/PropertyDescription.swift; sourceTree = "<group>"; };
+		8105B6D91C4F319C0038F86D /* PropertyDictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PropertyDictionary.swift; path = Sources/PropertyDictionary.swift; sourceTree = "<group>"; };
 		8143C8E11A82BA480077DE22 /* ModelRocket.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ModelRocket.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		8143C8E51A82BA480077DE22 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../ModelRocket/Info.plist; sourceTree = "<group>"; };
-		8143C8E61A82BA480077DE22 /* ModelRocket.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ModelRocket.h; path = ../ModelRocket/ModelRocket.h; sourceTree = "<group>"; };
 		8143C8EC1A82BA480077DE22 /* ModelRocketTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ModelRocketTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8143C8F21A82BA480077DE22 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../ModelRocketTests/Info.plist; sourceTree = "<group>"; };
 		8143C8F31A82BA480077DE22 /* ModelRocketTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ModelRocketTests.swift; path = ../ModelRocketTests/ModelRocketTests.swift; sourceTree = "<group>"; };
-		81629FCD1A95780100C2C42D /* PropertyDictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PropertyDictionary.swift; sourceTree = "<group>"; };
-		81BECF191B8BBBF5000F08E9 /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
 		81BECF1B1B8BD943000F08E9 /* JSONTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONTests.swift; sourceTree = "<group>"; };
 		81BECF1D1B8BD998000F08E9 /* Tests.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Tests.json; sourceTree = "<group>"; };
-		81F54F671A82D5D9005C8275 /* PropertyDescription.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PropertyDescription.swift; path = ../ModelRocket/PropertyDescription.swift; sourceTree = "<group>"; };
-		81F54F6A1A82D5E1005C8275 /* JSONTransformable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JSONTransformable.swift; path = ../ModelRocket/JSONTransformable.swift; sourceTree = "<group>"; };
-		81F54F6D1A82D5ED005C8275 /* Property.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Property.swift; path = ../ModelRocket/Property.swift; sourceTree = "<group>"; };
-		81F54F701A82D5F5005C8275 /* Model.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,10 +69,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8105B6D01C4F31920038F86D /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				8105B6D11C4F319C0038F86D /* Info.plist */,
+				8105B6D21C4F319C0038F86D /* JSON.swift */,
+				8105B6D31C4F319C0038F86D /* JSONTransformable.swift */,
+				8105B6D41C4F319C0038F86D /* Model.swift */,
+				8105B6D51C4F319C0038F86D /* ModelRocket.h */,
+				8105B6D61C4F319C0038F86D /* Property.swift */,
+				8105B6D71C4F319C0038F86D /* PropertyArray.swift */,
+				8105B6D81C4F319C0038F86D /* PropertyDescription.swift */,
+				8105B6D91C4F319C0038F86D /* PropertyDictionary.swift */,
+			);
+			name = Sources;
+			sourceTree = "<group>";
+		};
 		8143C8D71A82BA480077DE22 = {
 			isa = PBXGroup;
 			children = (
-				8143C8E31A82BA480077DE22 /* ModelRocket */,
+				8105B6D01C4F31920038F86D /* Sources */,
 				8143C8F01A82BA480077DE22 /* ModelRocketTests */,
 				8143C8E21A82BA480077DE22 /* Products */,
 			);
@@ -84,30 +101,6 @@
 				8143C8EC1A82BA480077DE22 /* ModelRocketTests.xctest */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		8143C8E31A82BA480077DE22 /* ModelRocket */ = {
-			isa = PBXGroup;
-			children = (
-				8143C8E61A82BA480077DE22 /* ModelRocket.h */,
-				81F54F671A82D5D9005C8275 /* PropertyDescription.swift */,
-				81F54F6A1A82D5E1005C8275 /* JSONTransformable.swift */,
-				81F54F6D1A82D5ED005C8275 /* Property.swift */,
-				810653281A847016004CA201 /* PropertyArray.swift */,
-				81629FCD1A95780100C2C42D /* PropertyDictionary.swift */,
-				81F54F701A82D5F5005C8275 /* Model.swift */,
-				81BECF191B8BBBF5000F08E9 /* JSON.swift */,
-				8143C8E41A82BA480077DE22 /* Supporting Files */,
-			);
-			path = ModelRocket;
-			sourceTree = "<group>";
-		};
-		8143C8E41A82BA480077DE22 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				8143C8E51A82BA480077DE22 /* Info.plist */,
-			);
-			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		8143C8F01A82BA480077DE22 /* ModelRocketTests */ = {
@@ -136,7 +129,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8143C8E71A82BA480077DE22 /* ModelRocket.h in Headers */,
+				8105B6DE1C4F319C0038F86D /* ModelRocket.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -186,7 +179,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftMigration = 0700;
-				LastSwiftUpdateCheck = 0700;
+				LastSwiftUpdateCheck = 0720;
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Oven Bits";
 				TargetAttributes = {
@@ -222,6 +215,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8105B6DA1C4F319C0038F86D /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -240,13 +234,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				810653291A847016004CA201 /* PropertyArray.swift in Sources */,
-				81BECF1A1B8BBBF5000F08E9 /* JSON.swift in Sources */,
-				81F54F711A82D5F5005C8275 /* Model.swift in Sources */,
-				81629FCE1A95780100C2C42D /* PropertyDictionary.swift in Sources */,
-				81F54F6B1A82D5E1005C8275 /* JSONTransformable.swift in Sources */,
-				81F54F6E1A82D5ED005C8275 /* Property.swift in Sources */,
-				81F54F681A82D5D9005C8275 /* PropertyDescription.swift in Sources */,
+				8105B6E01C4F319C0038F86D /* PropertyArray.swift in Sources */,
+				8105B6DD1C4F319C0038F86D /* Model.swift in Sources */,
+				8105B6E21C4F319C0038F86D /* PropertyDictionary.swift in Sources */,
+				8105B6DC1C4F319C0038F86D /* JSONTransformable.swift in Sources */,
+				8105B6DF1C4F319C0038F86D /* Property.swift in Sources */,
+				8105B6DB1C4F319C0038F86D /* JSON.swift in Sources */,
+				8105B6E11C4F319C0038F86D /* PropertyDescription.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -366,7 +360,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = ModelRocket/Info.plist;
+				INFOPLIST_FILE = Sources/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -387,7 +381,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = ModelRocket/Info.plist;
+				INFOPLIST_FILE = Sources/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";

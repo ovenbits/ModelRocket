@@ -29,7 +29,9 @@ public class Model: NSObject, NSCoding {
         return inspect(mirror)
     }
     
-    private func inspect(mirror: Mirror, var _ mappings: [PropertyDescription] = []) -> [PropertyDescription] {
+    private func inspect(mirror: Mirror, _ mappings: [PropertyDescription] = []) -> [PropertyDescription] {
+        
+        var mappings = mappings
         
         if let parentMirror = mirror.superclassMirror() where parentMirror.children.count > 0 {
             mappings += inspect(parentMirror, mappings)

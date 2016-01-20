@@ -21,7 +21,10 @@
 // SOFTWARE.
 
 import Foundation
+
+#if os(iOS)
 import UIKit
+#endif
 
 public protocol JSONTransformable {
     typealias T
@@ -97,10 +100,12 @@ extension NSDate: JSONTransformable {
 }
 
 // MARK: UIColor
-
+#if os(iOS)
 extension UIColor: JSONTransformable {
     public class func fromJSON(json: JSON) -> UIColor? {
-        if var hexString = json.string {
+        if let string = json.string {
+            var hexString = string
+            
             if (hexString.hasPrefix("#")) {
                 hexString = (hexString as NSString).substringFromIndex(1)
             }
@@ -131,6 +136,7 @@ extension UIColor: JSONTransformable {
         return hexString
     }
 }
+#endif
 
 // MARK: Bool
 

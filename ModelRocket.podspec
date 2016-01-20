@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "ModelRocket"
-  s.version          = "1.2.1"
+  s.version          = "1.2.3"
   s.license          = "MIT"
   s.summary          = "An iOS framework for creating JSON-based models. Written in Swift."
   s.homepage         = "https://github.com/ovenbits/ModelRocket"
@@ -8,5 +8,5 @@ Pod::Spec.new do |s|
   s.source           = { :git => "https://github.com/ovenbits/ModelRocket.git", :tag => s.version.to_s }
   s.platform         = :ios, '8.0'
   s.requires_arc     = true
-  s.source_files     = ['ModelRocket/*.swift', 'ModelRocket/*.h']
+  s.source_files     = ['Sources/*.swift', 'Sources/*.h']
 end
