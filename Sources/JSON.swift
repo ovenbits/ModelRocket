@@ -24,7 +24,7 @@ import Foundation
 
 public struct JSON {
     
-    private var object: AnyObject?
+    private(set) var object: AnyObject?
     
     public init() {
         self.object = nil
