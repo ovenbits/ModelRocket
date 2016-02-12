@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/ovenbits/ModelRocket.svg?branch=master)](https://travis-ci.org/ovenbits/ModelRocket)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
-![Cocoapods Compatible](https://img.shields.io/cocoapods/v/ModelRocket.svg)
+![CocoaPods Compatible](https://img.shields.io/cocoapods/v/ModelRocket.svg)
 ![License](https://img.shields.io/badge/license-MIT-000000.svg)
 ![Platform](https://img.shields.io/badge/platform-iOS-lightgrey.svg)
 
