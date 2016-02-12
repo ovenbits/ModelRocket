@@ -24,7 +24,7 @@ import Foundation
 
 public struct JSON {
     
-    private(set) var object: AnyObject?
+    private var object: AnyObject?
     
     public init() {
         self.object = nil
@@ -299,16 +299,14 @@ extension Dictionary {
 
 extension JSON: RawRepresentable {
     
-    enum JSONDataError: ErrorType {
-        case ObjectMissing
-        case InvalidJSONObject
+    enum DataError: ErrorType {
+        case MissingObject
+        case InvalidObject
     }
     
     public init?(rawValue: AnyObject) {
         guard NSJSONSerialization.isValidJSONObject(rawValue) else {
-            self.init()
-            
-            return
+            return nil
         }
         
         self.init(rawValue)
@@ -318,13 +316,13 @@ extension JSON: RawRepresentable {
         return self.object ?? NSNull()
     }
     
-    public func rawData(options: NSJSONWritingOptions = NSJSONWritingOptions(rawValue: 0)) throws -> NSData {
+    public func rawData(options: NSJSONWritingOptions = []) throws -> NSData {
         guard let object = object else {
-            throw JSONDataError.ObjectMissing
+            throw DataError.MissingObject
         }
         
         guard NSJSONSerialization.isValidJSONObject(object) else {
-            throw JSONDataError.InvalidJSONObject
+            throw DataError.InvalidObject
         }
         
         return try NSJSONSerialization.dataWithJSONObject(object, options: options)
