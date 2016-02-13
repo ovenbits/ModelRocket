@@ -299,31 +299,24 @@ extension Dictionary {
 
 extension JSON: RawRepresentable {
     
-    enum DataError: ErrorType {
+    public enum DataError: ErrorType {
         case MissingObject
         case InvalidObject
     }
     
     public init?(rawValue: AnyObject) {
-        guard NSJSONSerialization.isValidJSONObject(rawValue) else {
-            return nil
-        }
+        guard NSJSONSerialization.isValidJSONObject(rawValue) else { return nil }
         
         self.init(rawValue)
     }
     
     public var rawValue: AnyObject {
-        return self.object ?? NSNull()
+        return object ?? NSNull()
     }
     
     public func rawData(options: NSJSONWritingOptions = []) throws -> NSData {
-        guard let object = object else {
-            throw DataError.MissingObject
-        }
-        
-        guard NSJSONSerialization.isValidJSONObject(object) else {
-            throw DataError.InvalidObject
-        }
+        guard let object = object else { throw DataError.MissingObject }
+        guard NSJSONSerialization.isValidJSONObject(object) else { throw DataError.InvalidObject }
         
         return try NSJSONSerialization.dataWithJSONObject(object, options: options)
     }
