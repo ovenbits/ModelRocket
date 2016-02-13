@@ -481,4 +481,23 @@ class JSONTests: XCTestCase {
         XCTAssertEqual(json["dictionary"]["string2"].stringValue, "String 2")
         XCTAssertEqual(json["dictionary"]["string3"].stringValue, "String 3")
     }
+    
+    // MARK: - Raw (from loaded data)
+    
+    func testRaw() {
+        let jsonPath = NSBundle(forClass: self.dynamicType).pathForResource("Tests", ofType: "json")
+        let jsonData = NSData(contentsOfFile: jsonPath!)
+        let json = JSON(data: jsonData)
+        
+        XCTAssertFalse(json["model"].rawValue is NSNull)
+        XCTAssertTrue(json["driver"].rawValue is NSNull)
+
+        do {
+            let data = try json.rawData()
+            
+            XCTAssertNotNil(data)
+        } catch {
+            XCTFail("\(error)")
+        }
+    }
 }

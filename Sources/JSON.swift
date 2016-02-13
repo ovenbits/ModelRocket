@@ -295,6 +295,40 @@ extension Dictionary {
     }
 }
 
+// MARK: - Raw
+
+extension JSON: RawRepresentable {
+    
+    enum DataError: ErrorType {
+        case MissingObject
+        case InvalidObject
+    }
+    
+    public init?(rawValue: AnyObject) {
+        guard NSJSONSerialization.isValidJSONObject(rawValue) else {
+            return nil
+        }
+        
+        self.init(rawValue)
+    }
+    
+    public var rawValue: AnyObject {
+        return self.object ?? NSNull()
+    }
+    
+    public func rawData(options: NSJSONWritingOptions = []) throws -> NSData {
+        guard let object = object else {
+            throw DataError.MissingObject
+        }
+        
+        guard NSJSONSerialization.isValidJSONObject(object) else {
+            throw DataError.InvalidObject
+        }
+        
+        return try NSJSONSerialization.dataWithJSONObject(object, options: options)
+    }
+}
+
 // MARK: - Equatable
 
 extension JSON: Equatable {}
