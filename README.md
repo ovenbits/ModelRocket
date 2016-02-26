@@ -115,6 +115,10 @@ classes out of the box:
 ### Creating an object with a typed array
 
 ```swift
+// `Model` subclasses get `fromJSON` and `toJSON` implementations on `JSONTransformable` for free,
+// but explicit `JSONTransformable` conformance is still required
+extension Vehicle: JSONTransformable {}
+
 class Vehicles: Model {
     let vehicles = PropertyArray<Vehicle>(key: "vehicles")
 }
