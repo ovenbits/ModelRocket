@@ -10,9 +10,9 @@ An iOS framework for creating JSON-based models. Written in Swift (because [it t
 
 ## Requirements
 
-- iOS 7.0+
-- Xcode 7
-- Swift 2
+- iOS 8.0+
+- Xcode 7.3
+- Swift 2.2
 
 ## Installation
 
