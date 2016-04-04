@@ -27,7 +27,7 @@ import UIKit
 #endif
 
 public protocol JSONTransformable {
-    typealias T
+    associatedtype T
     
     /// Extract object from JSON
     static func fromJSON(json: JSON) -> T?

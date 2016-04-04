@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8105B6DA1C4F319C0038F86D /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8105B6D11C4F319C0038F86D /* Info.plist */; };
 		8105B6DB1C4F319C0038F86D /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8105B6D21C4F319C0038F86D /* JSON.swift */; };
 		8105B6DC1C4F319C0038F86D /* JSONTransformable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8105B6D31C4F319C0038F86D /* JSONTransformable.swift */; };
 		8105B6DD1C4F319C0038F86D /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8105B6D41C4F319C0038F86D /* Model.swift */; };
@@ -180,7 +179,7 @@
 			attributes = {
 				LastSwiftMigration = 0700;
 				LastSwiftUpdateCheck = 0720;
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = "Oven Bits";
 				TargetAttributes = {
 					8143C8E01A82BA480077DE22 = {
@@ -215,7 +214,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8105B6DA1C4F319C0038F86D /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -394,10 +392,6 @@
 		8143C8FB1A82BA480077DE22 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -412,10 +406,6 @@
 		8143C8FC1A82BA480077DE22 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
 				INFOPLIST_FILE = ModelRocketTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.ovenbits.$(PRODUCT_NAME:rfc1034identifier)";
