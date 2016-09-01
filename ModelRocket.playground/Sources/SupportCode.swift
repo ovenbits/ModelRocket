@@ -4,9 +4,9 @@
 
 import Foundation
 
-public func dataFromResource() -> NSData {
-    let jsonPath = NSBundle.mainBundle().pathForResource("TestJSON", ofType: "json")
-    let jsonData = NSData(contentsOfFile: jsonPath!)
+public func dataFromResource() -> Data {
+    let path = Bundle.main.path(forResource: "TestJSON", ofType: "json")!
+    let data = try! Data(contentsOf: URL(fileURLWithPath: path))
     
-    return jsonData!
+    return data
 }

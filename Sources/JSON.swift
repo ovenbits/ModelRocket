@@ -24,18 +24,18 @@ import Foundation
 
 public struct JSON {
     
-    private var object: AnyObject?
+    internal var object: Any?
     
     public init() {
         self.object = nil
     }
     
-    public init(_ object: AnyObject?) {
+    public init(_ object: Any?) {
         self.object = object
     }
     
-    public init(data: NSData?) {
-        if let data = data, let object: AnyObject = try? NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) {
+    public init(data: Data?) {
+        if let data = data, let object = try? JSONSerialization.jsonObject(with: data, options: .allowFragments) {
             self.init(object)
         }
         else {
@@ -45,35 +45,25 @@ public struct JSON {
     
     public subscript(key: String) -> JSON {
         set {
-            if let tempObject = object as? [String : AnyObject] {
+            if let tempObject = object as? [String : Any] {
                 var object = tempObject
                 
                 object[key] = newValue.object
-                self.object = object
+                self.object = object as Any
             }
             else {
-                var tempObject: [String : AnyObject] = [:]
+                var tempObject: [String : Any] = [:]
                 tempObject[key] = newValue.object
-                self.object = tempObject
+                self.object = tempObject as Any
             }
         }
         get {
-            /**
-                NSDictionary is used because it currently performs better than a native Swift dictionary.
-                The reason for this is that [String : AnyObject] is bridged to NSDictionary deep down the
-                call stack, and this bridging operation is relatively expensive. Until Swift is ABI stable
-                and/or doesn't require a bridge to Objective-C, NSDictionary will be used here
-            */
             if let dictionary = object as? NSDictionary {
-                return JSON(dictionary[key])
+                return JSON(dictionary[key] as Any)
             }
             
             return JSON()
         }
-    }
-    
-    @available(*, deprecated=1.2, message="Use !hasKey instead.") public var isNil: Bool {
-        return (object == nil)
     }
     
     public var hasKey: Bool {
@@ -89,12 +79,12 @@ public struct JSON {
 
 extension JSON: CustomStringConvertible {
     public var description: String {
-        if let object: AnyObject = object {
+        if let object = object as AnyObject? {
             switch object {
-            case is String, is NSNumber, is Float, is Double, is Int, is UInt, is Bool: return "\(object)"
+            case is String, is Float, is Double, is Int, is UInt, is Bool: return "\(object)"
             case is [AnyObject], is [String : AnyObject]:
-                if let data = try? NSJSONSerialization.dataWithJSONObject(object, options: .PrettyPrinted) {
-                    return NSString(data: data, encoding: NSUTF8StringEncoding) as? String ?? ""
+                if let data = try? JSONSerialization.data(withJSONObject: object, options: .prettyPrinted) {
+                    return String(data: data, encoding: .utf8) ?? ""
                 }
             default: return ""
             }
@@ -112,89 +102,89 @@ extension JSON: CustomDebugStringConvertible {
     }
 }
 
-// MARK: - NilLiteralConvertible
+// MARK: - ExpressibleByNilLiteral
 
-extension JSON: NilLiteralConvertible {
+extension JSON: ExpressibleByNilLiteral {
     public init(nilLiteral: ()) {
         self.init()
     }
 }
 
-// MARK: - StringLiteralConvertible
+// MARK: - ExpressibleByStringLiteral
 
-extension JSON: StringLiteralConvertible {
+extension JSON: ExpressibleByStringLiteral {
     public init(stringLiteral value: StringLiteralType) {
-        self.init(value)
+        self.init(value as Any)
     }
     
     public init(extendedGraphemeClusterLiteral value: StringLiteralType) {
-        self.init(value)
+        self.init(value as Any)
     }
     
     public init(unicodeScalarLiteral value: StringLiteralType) {
-        self.init(value)
+        self.init(value as Any)
     }
 }
 
-// MARK: - FloatLiteralConvertible
+// MARK: - ExpressibleByFloatLiteral
 
-extension JSON: FloatLiteralConvertible {
+extension JSON: ExpressibleByFloatLiteral {
     public init(floatLiteral value: FloatLiteralType) {
-        self.init(value)
+        self.init(value as Any)
     }
 }
 
-// MARK: - IntegerLiteralConvertible
+// MARK: - ExpressibleByIntegerLiteral
 
-extension JSON: IntegerLiteralConvertible {
+extension JSON: ExpressibleByIntegerLiteral {
     public init(integerLiteral value: IntegerLiteralType) {
-        self.init(value)
+        self.init(value as Any)
     }
 }
 
-// MARK: - BooleanLiteralConvertible
+// MARK: - ExpressibleByBooleanLiteral
 
-extension JSON: BooleanLiteralConvertible {
+extension JSON: ExpressibleByBooleanLiteral {
     public init(booleanLiteral value: BooleanLiteralType) {
-        self.init(value)
+        self.init(value as Any)
     }
 }
 
-// MARK: - ArrayLiteralConvertible
+// MARK: - ExpressibleByArrayLiteral
 
-extension JSON: ArrayLiteralConvertible {
-    public init(arrayLiteral elements: AnyObject...) {
-        self.init(elements)
+extension JSON: ExpressibleByArrayLiteral {
+    public init(arrayLiteral elements: Any...) {
+        self.init(elements as Any)
     }
 }
 
-// MARK: - DictionaryLiteralConvertible
+// MARK: - ExpressibleByDictionaryLiteral
 
-extension JSON: DictionaryLiteralConvertible {
-    public init(dictionaryLiteral elements: (String, AnyObject)...) {
-        var object: [String : AnyObject] = [:]
+extension JSON: ExpressibleByDictionaryLiteral {
+    public init(dictionaryLiteral elements: (String, Any)...) {
+        var object: [String : Any] = [:]
         
         for (key, value) in elements {
             object[key] = value
         }
         
-        self.init(object)
+        self.init(object as Any)
     }
 }
 
 // MARK: - CollectionType
 
-extension JSON: CollectionType {
-    public func generate() -> IndexingGenerator<[JSON]> {
-        return arrayValue.generate()
+extension JSON: Sequence {
+    public func makeIterator() -> IndexingIterator<[JSON]> {
+        return arrayValue.makeIterator()
     }
     
     public var startIndex: Int {
-        return 0
+        return arrayValue.startIndex
     }
     
     public var endIndex: Int {
-        return arrayValue.count
+        return arrayValue.endIndex
     }
     
     public subscript(position: Int) -> JSON {
@@ -209,38 +199,31 @@ extension JSON {
     public var stringValue: String { return string ?? "" }
 }
 
-// MARK: - NSNumber
-
-extension JSON {
-    public var number: NSNumber? { return object as? NSNumber }
-    public var numberValue: NSNumber { return number ?? 0 }
-}
-
 // MARK: - Float
 
 extension JSON {
-    public var float: Float? { return object as? Float }
+    public var float: Float? { return (object as? NSNumber)?.floatValue }
     public var floatValue: Float { return float ?? 0 }
 }
 
 // MARK: - Double
 
 extension JSON {
-    public var double: Double? { return object as? Double }
+    public var double: Double? { return (object as? NSNumber)?.doubleValue }
     public var doubleValue: Double { return double ?? 0 }
 }
 
 // MARK: - Int
 
 extension JSON {
-    public var int: Int? { return object as? Int }
+    public var int: Int? { return (object as? NSNumber)?.intValue }
     public var intValue: Int { return int ?? 0 }
 }
 
 // MARK: - UInt
 
 extension JSON {
-    public var uInt: UInt? { return object as? UInt }
+    public var uInt: UInt? { return (object as? NSNumber)?.uintValue }
     public var uIntValue: UInt { return uInt ?? 0 }
 }
 
@@ -251,12 +234,12 @@ extension JSON {
     public var boolValue: Bool { return bool ?? false }
 }
 
-// MARK: - NSURL
+// MARK: - URL
 
 extension JSON {
-    public var URL: NSURL? {
+    public var url: URL? {
         if let urlString = string {
-            return NSURL(string: urlString)
+            return URL(string: urlString)
         }
         return nil
     }
@@ -279,7 +262,12 @@ extension JSON {
 extension JSON {
     public var dictionary: [String : JSON]? {
         if let dictionary = object as? [String : AnyObject] {
-            return Dictionary(dictionary.map { ($0, JSON($1)) })
+            let map = dictionary.map { ($0, JSON($1 as AnyObject)) }
+            var dictionary: [String : JSON] = [:]
+            for (key, value) in map {
+                dictionary[key] = value
+            }
+            return dictionary
         }
         return nil
     }
@@ -287,7 +275,7 @@ extension JSON {
 }
 
 extension Dictionary {
-    private init(_ pairs: [Element]) {
+    private init(pairs: [(Key, Value)]) {
         self.init()
         for (key, value) in pairs {
             self[key] = value
@@ -299,57 +287,68 @@ extension Dictionary {
 
 extension JSON: RawRepresentable {
     
-    public enum DataError: ErrorType {
-        case MissingObject
-        case InvalidObject
+    public enum DataError: Error {
+        case missingObject
+        case invalidObject
     }
     
-    public init?(rawValue: AnyObject) {
-        guard NSJSONSerialization.isValidJSONObject(rawValue) else { return nil }
+    public init?(rawValue: Any) {
+        guard JSONSerialization.isValidJSONObject(rawValue) else { return nil }
         
         self.init(rawValue)
     }
     
-    public var rawValue: AnyObject {
+    public var rawValue: Any {
         return object ?? NSNull()
     }
     
-    public func rawData(options: NSJSONWritingOptions = []) throws -> NSData {
-        guard let object = object else { throw DataError.MissingObject }
-        guard NSJSONSerialization.isValidJSONObject(object) else { throw DataError.InvalidObject }
+    public func rawData(options: JSONSerialization.WritingOptions = []) throws -> Data {
+        guard let object = object else { throw DataError.missingObject }
+        guard JSONSerialization.isValidJSONObject(object) else { throw DataError.invalidObject }
         
-        return try NSJSONSerialization.dataWithJSONObject(object, options: options)
+        return try JSONSerialization.data(withJSONObject: object, options: options)
     }
 }
 
 // MARK: - Equatable
 
-extension JSON: Equatable {}
+extension JSON: Equatable {
 
-public func ==(lhs: JSON, rhs: JSON) -> Bool {
-    guard let lhsObject: AnyObject = lhs.object, rhsObject: AnyObject = rhs.object else { return false }
+    public static func ==(lhs: JSON, rhs: JSON) -> Bool {
+        guard let lhsObject: Any = lhs.object, let rhsObject: Any = rhs.object else { return false }
 
-    switch (lhsObject, rhsObject) {
-    case (let left as String, let right as String):
-        return left == right
-    case (let left as Double, let right as Double):
-        return left == right
-    case (let left as Float, let right as Float):
-        return left == right
-    case (let left as Int, let right as Int):
-        return left == right
-    case (let left as UInt, let right as UInt):
-        return left == right
-    case (let left as Bool, let right as Bool):
-        return left == right
-    case (let left as NSURL, let right as NSURL):
-        return left == right
-    case (let left as NSNumber, let right as NSNumber):
-        return left == right
-    case (let left as [AnyObject], let right as [AnyObject]):
-        return left.map { JSON($0) } == right.map { JSON ($0) }
-    case (let left as [String : AnyObject], let right as [String : AnyObject]):
-        return Dictionary(left.map { ($0, JSON($1)) }) == Dictionary(right.map { ($0, JSON($1)) })
-    default: return false
+        switch (lhsObject, rhsObject) {
+        case (let left as String, let right as String):
+            return left == right
+        case (let left as Double, let right as Double):
+            return left == right
+        case (let left as Float, let right as Float):
+            return left == right
+        case (let left as Int, let right as Int):
+            return left == right
+        case (let left as UInt, let right as UInt):
+            return left == right
+        case (let left as Bool, let right as Bool):
+            return left == right
+        case (let left as URL, let right as URL):
+            return left == right
+        case (let left as [AnyObject], let right as [AnyObject]):
+            return left.map { JSON($0) } == right.map { JSON ($0) }
+        case (let left as [String : AnyObject], let right as [String : AnyObject]):
+            let leftMap = left.map { ($0, JSON($1 as AnyObject)) }
+            var leftDictionary: [String : JSON] = [:]
+            for (key, value) in leftMap {
+                leftDictionary[key] = value
+            }
+            
+            let rightMap = right.map { ($0, JSON($1 as AnyObject)) }
+            var rightDictionary: [String : JSON] = [:]
+            for (key, value) in rightMap {
+                rightDictionary[key] = value
+            }
+            
+            return leftDictionary == rightDictionary
+        default: return false
+        }
     }
 }

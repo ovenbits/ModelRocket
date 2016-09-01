@@ -60,14 +60,14 @@ final public class Property<T : JSONTransformable>: PropertyDescription {
     // MARK: Transform
     
     /// Extract object from JSON and return whether or not the value was extracted
-    public func fromJSON(json: JSON) -> Bool {
+    public func from(json: JSON) -> Bool {
         var jsonValue = json
         
-        key.componentsSeparatedByString(".").forEach {
+        key.components(separatedBy: ".").forEach {
             jsonValue = jsonValue[$0]
         }
         
-        if let newValue = PropertyType.fromJSON(jsonValue) as? PropertyType {
+        if let newValue = PropertyType.from(json: jsonValue) {
             value = newValue
         }
         
@@ -75,7 +75,7 @@ final public class Property<T : JSONTransformable>: PropertyDescription {
     }
     
     /// Convert object to JSON
-    public func toJSON() -> AnyObject? {
+    public func toJSON() -> Any? {
         return value?.toJSON()
     }
     
@@ -87,14 +87,29 @@ final public class Property<T : JSONTransformable>: PropertyDescription {
     // MARK: Coding
     
     /// Encode
-    public func encode(coder: NSCoder) {
-        if let object: AnyObject = value as? AnyObject {
-            coder.encodeObject(object, forKey: key)
+    public func encode(_ coder: NSCoder) {
+        if let object = value as Any? {
+            if (object as AnyObject).responds(to: #selector(NSCoding.encode(with:))) == true {
+                coder.encode(object, forKey: key)
+            }
+            else if let object = object as? JSONTransformable {
+                coder.encode(object.toJSON(), forKey: key)
+            }
         }
     }
     
-    public func decode(decoder: NSCoder) {
-        if let decodedValue = decoder.decodeObjectForKey(key) as? PropertyType {
+    private func encodeRawRepresentable<T: RawRepresentable>(value: T, key: String) -> PropertyType? {
+        guard let compatible = value.rawValue as? PropertyType else {
+            return nil
+        }
+        return compatible
+    }
+    
+    public func decode(_ decoder: NSCoder) {
+        if let decodedValue = decoder.decodeObject(forKey: key) as? PropertyType {
+            value = decodedValue
+        }
+        else if let decodedValue = PropertyType.from(json: JSON(decoder.decodeObject(forKey: key) as Any)) {
             value = decodedValue
         }
     }
@@ -128,7 +143,7 @@ extension Property: CustomDebugStringConvertible {
 
 // MARK:- Hashable
 
-extension Property: Hashable {
+extension Property/*: Hashable*/ {
     public var hashValue: Int {
         return key.hashValue
     }
@@ -136,12 +151,13 @@ extension Property: Hashable {
 
 // MARK:- Equatable
 
-extension Property: Equatable {}
+//extension Property: Equatable {}
+
 
 public func ==<T: Equatable>(lhs: Property<T>, rhs: Property<T>) -> Bool {
     return lhs.key == rhs.key && lhs.value == rhs.value
 }
 
-public func ==<T>(lhs: Property<T>, rhs: Property<T>) -> Bool {
-    return lhs.key == rhs.key
-}
+//public static func ==<T>(lhs: Property<T>, rhs: Property<T>) -> Bool {
+//    return lhs.key == rhs.key
+//}

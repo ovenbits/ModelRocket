@@ -49,8 +49,8 @@ class JSONTests: XCTestCase {
     
     func testJSONData() {
         
-        let path = NSBundle(forClass: JSONTests.self).pathForResource("Tests", ofType: "json")!
-        let data = NSData(contentsOfFile: path)
+        let path = Bundle(for: JSONTests.self).path(forResource: "Tests", ofType: "json")!
+        let data = try! Data(contentsOf: URL(fileURLWithPath: path))
         let vehicleJSON = JSON(data: data)
         
         // No data
@@ -62,11 +62,6 @@ class JSONTests: XCTestCase {
         XCTAssertEqual(vehicleJSON["make"].stringValue, "BMW")
         XCTAssertEqual(vehicleJSON["manufacturer"]["company_name"].stringValue, "Bayerische Motoren Werke AG")
         XCTAssertNil(vehicleJSON["year"].string)
-        
-        // Number
-        XCTAssertEqual(vehicleJSON["year"].numberValue, 2015)
-        XCTAssertEqual(vehicleJSON["purchased_trims"]["sedan"].numberValue, 1024)
-        XCTAssertNil(vehicleJSON["model"].number)
         
         // Float
         XCTAssertEqual(vehicleJSON["zero_to_sixty_time"].floatValue, 4.7)
@@ -93,7 +88,7 @@ class JSONTests: XCTestCase {
         XCTAssertNil(vehicleJSON["model"].bool)
         
         // URL
-        XCTAssertEqual(vehicleJSON["manufacturer"]["website"].URL!, NSURL(string: "http://www.bmw.com")!)
+        XCTAssertEqual(vehicleJSON["manufacturer"]["website"].url!, URL(string: "http://www.bmw.com")!)
         XCTAssertNil(vehicleJSON["model"].int)
         
         // Array
@@ -211,7 +206,7 @@ class JSONTests: XCTestCase {
         XCTAssertTrue(lhs["int"] == rhs["int"])
         XCTAssertTrue(lhs["float"] == rhs["float"])
         XCTAssertTrue(lhs["bool"] == rhs["bool"])
-        XCTAssertTrue(lhs["url"].URL == rhs["url"].URL)
+        XCTAssertTrue(lhs["url"].url == rhs["url"].url)
         XCTAssertTrue(lhs["array"] == rhs["array"])
         XCTAssertTrue(lhs["dictionary"] == rhs["dictionary"])
         XCTAssertTrue(lhs == rhs)
@@ -244,32 +239,12 @@ class JSONTests: XCTestCase {
         XCTAssertEqual(json["string"].debugDescription, "Test string")
     }
     
-    // MARK: - NSNumber
-    
-    func testNumber() {
-        // Good value
-        XCTAssertEqual(json["number"].number!, 3)
-        XCTAssertEqual(json["number"].numberValue, 3)
-        
-        // Mistyped value
-        XCTAssertNil(json["string"].number)
-        XCTAssertEqual(json["string"].numberValue, 0)
-        
-        // Missing value
-        XCTAssertNil(json["number2"].number)
-        XCTAssertEqual(json["number2"].numberValue, 0)
-        
-        // CustomStringConvertible
-        XCTAssertEqual(json["number"].description, "3")
-        XCTAssertEqual(json["number"].debugDescription, "3")
-    }
-    
     // MARK: - Float
     
     func testFloatLiteralConvertible() {
         let json: JSON = 1.234
         
-        XCTAssertEqual(json.float!, 1.234)
+        XCTAssertEqual(json.float ?? 0, 1.234)
         XCTAssertEqual(json.floatValue, 1.234)
     }
     
@@ -384,17 +359,17 @@ class JSONTests: XCTestCase {
         XCTAssertEqual(json["bool"].debugDescription, "1")
     }
     
-    // MARK: - NSURL
+    // MARK: - URL
     
     func testURL() {
         // Good value
-        XCTAssertEqual(json["url"].URL!, NSURL(string: "http://ovenbits.com")!)
+        XCTAssertEqual(json["url"].url!, URL(string: "http://ovenbits.com")!)
         
         // Mistyped value
-        XCTAssertNil(json["int"].URL)
+        XCTAssertNil(json["int"].url)
         
         // Missing value
-        XCTAssertNil(json["url2"].URL)
+        XCTAssertNil(json["url2"].url)
         
         // CustomStringConvertible
         XCTAssertEqual(json["url"].description, "http://ovenbits.com")
@@ -440,8 +415,8 @@ class JSONTests: XCTestCase {
     // MARK: - NSNull (from loaded data)
     
     func testNSNull() {
-        let jsonPath = NSBundle(forClass: self.dynamicType).pathForResource("Tests", ofType: "json")
-        let jsonData = NSData(contentsOfFile: jsonPath!)
+        let jsonPath = Bundle(for: type(of: self)).path(forResource: "Tests", ofType: "json")!
+        let jsonData = try! Data(contentsOf: URL(fileURLWithPath: jsonPath))
         let json = JSON(data: jsonData)
         
         XCTAssertFalse(json["driver"].hasValue)
@@ -485,8 +460,8 @@ class JSONTests: XCTestCase {
     // MARK: - Raw (from loaded data)
     
     func testRaw() {
-        let jsonPath = NSBundle(forClass: self.dynamicType).pathForResource("Tests", ofType: "json")
-        let jsonData = NSData(contentsOfFile: jsonPath!)
+        let jsonPath = Bundle(for: type(of: self)).path(forResource: "Tests", ofType: "json")!
+        let jsonData = try! Data(contentsOf: URL(fileURLWithPath: jsonPath))
         let json = JSON(data: jsonData)
         
         XCTAssertFalse(json["model"].rawValue is NSNull)

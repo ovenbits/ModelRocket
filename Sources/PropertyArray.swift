@@ -59,20 +59,20 @@ final public class PropertyArray<T : JSONTransformable>: PropertyDescription {
     // MARK: Transform
     
     /// Extract object from JSON and return whether or not the value was extracted
-    public func fromJSON(json: JSON) -> Bool {
+    public func from(json: JSON) -> Bool {
         var jsonValue: JSON = json
 
-        key.componentsSeparatedByString(".").forEach {
+        key.components(separatedBy: ".").forEach {
             jsonValue = jsonValue[$0]
         }
         
-        values = jsonValue.flatMap { PropertyType.fromJSON($0) as? PropertyType }
+        values = jsonValue.flatMap { PropertyType.from(json: $0) }
         
         return !values.isEmpty
     }
     
     /// Convert object to JSON
-    public func toJSON() -> AnyObject? {
+    public func toJSON() -> Any? {
         return values.map { $0.toJSON() }
     }
     
@@ -84,13 +84,13 @@ final public class PropertyArray<T : JSONTransformable>: PropertyDescription {
     // MARK: Coding
     
     /// Encode
-    public func encode(coder: NSCoder) {
-        let objectArray = values.flatMap { $0 as? AnyObject }
-        coder.encodeObject(objectArray, forKey: key)
+    public func encode(_ coder: NSCoder) {
+        let objectArray = values.map { $0 as AnyObject }
+        coder.encode(objectArray, forKey: key)
     }
     
-    public func decode(decoder: NSCoder) {
-        let decodedObjects = decoder.decodeObjectForKey(key) as? [AnyObject] ?? []
+    public func decode(_ decoder: NSCoder) {
+        let decodedObjects = decoder.decodeObject(forKey: key) as? [AnyObject] ?? []
         values = decodedObjects.flatMap { $0 as? PropertyType }
     }
 }
@@ -113,17 +113,21 @@ extension PropertyArray: CustomDebugStringConvertible {
 
 // MARK:- CollectionType
 
-extension PropertyArray: CollectionType {
-    public func generate() -> IndexingGenerator<[PropertyType]> {
-        return values.generate()
+extension PropertyArray: Collection {
+    public func generate() -> IndexingIterator<[PropertyType]> {
+        return values.makeIterator()
     }
     
     public var startIndex: Int {
-        return 0
+        return values.startIndex
     }
     
     public var endIndex: Int {
-        return values.count
+        return values.endIndex
+    }
+    
+    public func index(after i: Int) -> Int {
+        return values.index(after: i)
     }
     
     public subscript(index: Int) -> PropertyType {
@@ -133,7 +137,7 @@ extension PropertyArray: CollectionType {
 
 // MARK:- Hashable
 
-extension PropertyArray: Hashable {
+extension PropertyArray/*: Hashable*/ {
     public var hashValue: Int {
         return key.hashValue
     }
@@ -141,12 +145,12 @@ extension PropertyArray: Hashable {
 
 // MARK:- Equatable
 
-extension PropertyArray: Equatable {}
+//extension PropertyArray: Equatable {}
 
 public func ==<T: Equatable>(lhs: PropertyArray<T>, rhs: PropertyArray<T>) -> Bool {
     return lhs.key == rhs.key && lhs.values == rhs.values
 }
 
-public func ==<T>(lhs: PropertyArray<T>, rhs: PropertyArray<T>) -> Bool {
-    return lhs.key == rhs.key
-}
+//public func ==<T>(lhs: PropertyArray<T>, rhs: PropertyArray<T>) -> Bool {
+//    return lhs.key == rhs.key
+//}

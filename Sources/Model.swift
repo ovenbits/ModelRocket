@@ -22,18 +22,18 @@
 
 import Foundation
 
-public class Model: NSObject, NSCoding {
+open class Model: NSObject, NSCoding {
     
-    private var JSONMappings: [PropertyDescription] {
+    private var jsonMappings: [PropertyDescription] {
         let mirror = Mirror(reflecting: self)
         return inspect(mirror)
     }
     
-    private func inspect(mirror: Mirror, _ mappings: [PropertyDescription] = []) -> [PropertyDescription] {
+    private func inspect(_ mirror: Mirror, _ mappings: [PropertyDescription] = []) -> [PropertyDescription] {
         
         var mappings = mappings
         
-        if let parentMirror = mirror.superclassMirror() where parentMirror.children.count > 0 {
+        if let parentMirror = mirror.superclassMirror, !parentMirror.children.isEmpty {
             mappings += inspect(parentMirror, mappings)
         }
         
@@ -50,8 +50,8 @@ public class Model: NSObject, NSCoding {
     
     public required init(json: JSON) {
         super.init()
-        JSONMappings.forEach { $0.fromJSON(json) }
-        JSONMappings.forEach { $0.initPostProcess() }
+        jsonMappings.forEach { $0.from(json: json) }
+        jsonMappings.forEach { $0.initPostProcess() }
     }
     
     public required init?(strictJSON: JSON) {
@@ -59,10 +59,10 @@ public class Model: NSObject, NSCoding {
         
         var valid = true
         
-        var debugString = "Initializing object of type: \(self.dynamicType)"
+        var debugString = "Initializing object of type: \(type(of: self))"
         
-        for map in JSONMappings {
-            let validObject = map.fromJSON(strictJSON)
+        for map in jsonMappings {
+            let validObject = map.from(json: strictJSON)
             
             if map.required && !validObject {
                 valid = false
@@ -82,7 +82,7 @@ public class Model: NSObject, NSCoding {
             return nil
         }
         
-        JSONMappings.forEach { $0.initPostProcess() }
+        jsonMappings.forEach { $0.initPostProcess() }
     }
     
     public class func modelForJSON(json: JSON) -> Model {
@@ -95,42 +95,42 @@ public class Model: NSObject, NSCoding {
     
     // MARK: JSON
     
-    private func subKeyPathDictionary(value value: AnyObject, keys: [String], index: Int, previousDictionary: AnyObject?) -> [String : AnyObject] {
+    private func subKeyPathDictionary(value: Any, keys: [String], index: Int, previousDictionary: Any?) -> [String : Any] {
         
         if index == 0 {
             let key = keys[index]
-            guard let previousDictionary = previousDictionary as? [String : AnyObject] else { return [key : value] }
+            guard let previousDictionary = previousDictionary as? [String : Any] else { return [key : value] }
             
             return mergeDictionaries(previousDictionary, [key : value])
         }
         
-        return subKeyPathDictionary(value: [keys[index] : value], keys: keys, index: index-1, previousDictionary: previousDictionary)
+        return subKeyPathDictionary(value: [keys[index] : value], keys: keys, index: index - 1, previousDictionary: previousDictionary)
     }
     
     /// Create JSON representation of object
-    public func json() -> (dictionary: [String : AnyObject], json: JSON?, data: NSData?) {
+    public var json: (dictionary: [String : Any], json: JSON?, data: Data?) {
         
-        var dictionary: [String : AnyObject] = [:]
+        var dictionary: [String : Any] = [:]
         
-        for map in JSONMappings {
-            let components = map.key.componentsSeparatedByString(".")
+        for map in jsonMappings {
+            let components = map.key.components(separatedBy: ".")
             if components.count > 1 {
-                if let value: AnyObject = map.toJSON() {
+                if let value = map.toJSON() {
                     
                     let firstKeyPath = components[0]
                     let subKeyPaths = Array(components[1..<components.count])
-                    let previousDictionary: AnyObject? = dictionary[firstKeyPath]
+                    let previousDictionary: Any? = dictionary[firstKeyPath]
                     let subDictionary = subKeyPathDictionary(value: value, keys: subKeyPaths, index: subKeyPaths.count-1, previousDictionary: previousDictionary)
 
-                    dictionary[firstKeyPath] = subDictionary
+                    dictionary[firstKeyPath] = subDictionary as AnyObject
                 }
             }
-            else if let value: AnyObject = map.toJSON() {
+            else if let value = map.toJSON() {
                 dictionary[map.key] = value
             }
         }
         
-        if let jsonData = try? NSJSONSerialization.dataWithJSONObject(dictionary, options: .PrettyPrinted) {
+        if let jsonData = try? JSONSerialization.data(withJSONObject: dictionary, options: .prettyPrinted) {
             let json = JSON(data: jsonData)
             
             return (dictionary: dictionary, json: json, data: jsonData)
@@ -143,34 +143,34 @@ public class Model: NSObject, NSCoding {
     
     public required convenience init?(coder aDecoder: NSCoder) {
         self.init()
-        JSONMappings.forEach { $0.decode(aDecoder) }
+        jsonMappings.forEach { $0.decode(aDecoder) }
     }
     
-    public func encodeWithCoder(aCoder: NSCoder) {
-        JSONMappings.forEach { $0.encode(aCoder) }
+    open func encode(with aCoder: NSCoder) {
+        jsonMappings.forEach { $0.encode(aCoder) }
     }
     
     // MARK: Copying
     
-    public override func copy() -> AnyObject {
-        if let json = json().json {
-            return self.dynamicType.init(json: json)
+    open override func copy() -> Any {
+        if let json = json.json {
+            return type(of: self).init(json: json)
         }
-        return self.dynamicType.init()
+        return type(of: self).init()
     }
     
     // MARK: Private
     
-    private func mergeDictionaries(left: [String : AnyObject], _ right: [String : AnyObject]) -> [String : AnyObject] {
+    private func mergeDictionaries(_ left: [String : Any], _ right: [String : Any]) -> [String : Any] {
         
-        var map: [String : AnyObject] = [:]
+        var map: [String : Any] = [:]
         for (k, v) in left {
             map[k] = v
         }
         
         for (k, v) in right {
-            if let previousValue = map[k] as? [String : AnyObject] {
-                if let value = v as? [String : AnyObject] {
+            if let previousValue = map[k] as? [String : Any] {
+                if let value = v as? [String : Any] {
                     let replacement = mergeDictionaries(previousValue, value)
                     map[k] = replacement
                     continue

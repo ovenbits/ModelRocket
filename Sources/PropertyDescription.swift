@@ -34,18 +34,19 @@ public protocol PropertyDescription {
     var required: Bool { get }
     
     /// Extract object from JSON and return whether or not the value was extracted
-    func fromJSON(json: JSON) -> Bool
+    @discardableResult
+    func from(json: JSON) -> Bool
     
     /// Convert object to JSON
-    func toJSON() -> AnyObject?
+    func toJSON() -> Any?
     
     /// Encode object for NSCoder
-    func encode(coder: NSCoder)
+    func encode(_ coder: NSCoder)
     
     /// Encode object from NSCoder
-    func decode(decoder: NSCoder)
+    func decode(_ decoder: NSCoder)
     
-    /// After the whole Model object has been initialized and its Property properties initalized fromJSON(),
+    /// After the whole Model object has been initialized and its Property properties initalized from(json:),
     /// invoked to permit further post-processing of the Property that may depend upon other information from the
     /// whole of the Model object.
     func initPostProcess()

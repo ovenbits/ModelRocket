@@ -59,16 +59,16 @@ final public class PropertyDictionary<T : JSONTransformable>: PropertyDescriptio
     // MARK: Transform
     
     /// Extract object from JSON and return whether or not the value was extracted
-    public func fromJSON(json: JSON) -> Bool {
+    public func from(json: JSON) -> Bool {
         var jsonValue: JSON = json
-        let keyPaths = key.componentsSeparatedByString(".")
+        let keyPaths = key.components(separatedBy: ".")
         for key in keyPaths {
             jsonValue = jsonValue[key]
         }
         
-        values.removeAll(keepCapacity: false)
+        values.removeAll()
         for object in jsonValue.dictionary ?? [:]  {
-            if let property = PropertyType.fromJSON(object.1) as? PropertyType {
+            if let property = PropertyType.from(json: object.1) {
                 values[object.0] = property
             }
         }
@@ -77,8 +77,8 @@ final public class PropertyDictionary<T : JSONTransformable>: PropertyDescriptio
     }
     
     /// Convert object to JSON
-    public func toJSON() -> AnyObject? {
-        var jsonDictionary: [String : AnyObject] = [:]
+    public func toJSON() -> Any? {
+        var jsonDictionary: [String : Any] = [:]
         for (key, value) in values {
             jsonDictionary[key] = value.toJSON()
         }
@@ -93,19 +93,17 @@ final public class PropertyDictionary<T : JSONTransformable>: PropertyDescriptio
     // MARK: Coding
     
     /// Encode
-    public func encode(coder: NSCoder) {
+    public func encode(_ coder: NSCoder) {
         var objectDictionary: [String : AnyObject] = [:]
         for (key, value) in values {
-            if let object: AnyObject = value as? AnyObject {
-                objectDictionary[key] = object
-            }
+            objectDictionary[key] = value as AnyObject
         }
-        coder.encodeObject(objectDictionary, forKey: key)
+        coder.encode(objectDictionary, forKey: key)
     }
     
-    public func decode(decoder: NSCoder) {
-        let decodedObjects = decoder.decodeObjectForKey(key) as? [String : AnyObject]
-        values.removeAll(keepCapacity: false)
+    public func decode(_ decoder: NSCoder) {
+        let decodedObjects = decoder.decodeObject(forKey: key) as? [String : AnyObject]
+        values.removeAll()
         for (key, value) in decodedObjects ?? [:] {
             if let value = value as? PropertyType {
                 values[key] = value
@@ -132,9 +130,9 @@ extension PropertyDictionary: CustomDebugStringConvertible {
 
 // MARK:- CollectionType
 
-extension PropertyDictionary: CollectionType {
-    public func generate() -> DictionaryGenerator<String, PropertyType> {
-        return values.generate()
+extension PropertyDictionary: Collection {
+    public func generate() -> DictionaryIterator<String, PropertyType> {
+        return values.makeIterator()
     }
     
     public var startIndex: DictionaryIndex<String, PropertyType> {
@@ -143,6 +141,10 @@ extension PropertyDictionary: CollectionType {
     
     public var endIndex: DictionaryIndex<String, PropertyType> {
         return values.endIndex
+    }
+    
+    public func index(after i: DictionaryIndex<String, PropertyType>) -> DictionaryIndex<String, PropertyType> {
+        return values.index(after: i)
     }
     
     public subscript(position: DictionaryIndex<String, PropertyType>) -> (String, PropertyType) {
@@ -156,7 +158,7 @@ extension PropertyDictionary: CollectionType {
 
 // MARK:- Hashable
 
-extension PropertyDictionary: Hashable {
+extension PropertyDictionary/*: Hashable*/ {
     public var hashValue: Int {
         return key.hashValue
     }
@@ -164,12 +166,12 @@ extension PropertyDictionary: Hashable {
 
 // MARK:- Equatable
 
-extension PropertyDictionary: Equatable {}
+//extension PropertyDictionary: Equatable {}
 
 public func ==<T: Equatable>(lhs: PropertyDictionary<T>, rhs: PropertyDictionary<T>) -> Bool {
     return lhs.key == rhs.key && lhs.values == rhs.values
 }
 
-public func ==<T>(lhs: PropertyDictionary<T>, rhs: PropertyDictionary<T>) -> Bool {
-    return lhs.key == rhs.key
-}
+//public func ==<T>(lhs: PropertyDictionary<T>, rhs: PropertyDictionary<T>) -> Bool {
+//    return lhs.key == rhs.key
+//}
